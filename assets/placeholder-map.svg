@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 500" role="img" aria-labelledby="title desc">
+  <title id="title">Mapa provisório da Barra da Tijuca</title>
+  <desc id="desc">Mapa gráfico leve reservado para a localização do escritório</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="720" y2="500" gradientUnits="userSpaceOnUse"><stop stop-color="#EEF3F9"/><stop offset="1" stop-color="#DCE5F0"/></linearGradient>
+    <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#07152F" flood-opacity=".2"/></filter>
+  </defs>
+  <rect width="720" height="500" fill="url(#bg)"/>
+  <path d="M-20 393C120 330 166 421 288 367s188-29 260-89 131-51 202-78" fill="none" stroke="#B7C6D8" stroke-width="36"/>
+  <path d="M-20 393C120 330 166 421 288 367s188-29 260-89 131-51 202-78" fill="none" stroke="#fff" stroke-width="29"/>
+  <path d="M89-10c24 85 13 148 91 204s78 111 54 180" fill="none" stroke="#CAD5E2" stroke-width="17"/>
+  <path d="M89-10c24 85 13 148 91 204s78 111 54 180" fill="none" stroke="#fff" stroke-width="12"/>
+  <path d="M397-20c-20 98-6 166 46 217s55 121 45 194" fill="none" stroke="#CAD5E2" stroke-width="17"/>
+  <path d="M397-20c-20 98-6 166 46 217s55 121 45 194" fill="none" stroke="#fff" stroke-width="12"/>
+  <path d="M0 72c106 12 188 32 278 6s198-9 302 24 160 7 180-3" fill="none" stroke="#CCD8E5" stroke-width="13"/>
+  <path d="M0 72c106 12 188 32 278 6s198-9 302 24 160 7 180-3" fill="none" stroke="#fff" stroke-width="8"/>
+  <rect y="434" width="720" height="66" fill="#B9D9E8"/>
+  <text x="595" y="473" fill="#54778A" font-family="Arial, sans-serif" font-size="13" letter-spacing="2">BARRA DA TIJUCA</text>
+  <g transform="translate(370 250)" filter="url(#shadow)">
+    <path d="M0-67a51 51 0 0 0-51 51C-51 20 0 66 0 66S51 20 51-16A51 51 0 0 0 0-67Z" fill="#1658CC"/>
+    <circle cy="-17" r="18" fill="#fff"/>
+  </g>
+  <rect x="265" y="336" width="210" height="38" rx="19" fill="#07152F"/>
+  <text x="370" y="361" fill="#fff" font-family="Arial, sans-serif" font-size="13" text-anchor="middle" letter-spacing="1.5">AV. DAS AMÉRICAS, 3443</text>
+</svg>
