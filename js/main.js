@@ -90,6 +90,8 @@
     quizAnswers: {},
     quizStarted: false
   };
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let contextTransitionTimer;
 
   const elements = {
     tabs: [...document.querySelectorAll('[role="tab"][data-context]')],
@@ -100,6 +102,8 @@
     secondaryCta: document.querySelector('[data-dynamic="secondary-cta"]'),
     dynamicIcon: document.querySelector('.dynamic-icon use'),
     serviceGroups: [...document.querySelectorAll('[data-service-group]')],
+    servicesPanel: document.querySelector('#services-panel'),
+    otherContextLink: document.querySelector('[data-other-context]'),
     quizForm: document.querySelector('#quiz-form'),
     quizSubmit: document.querySelector('#quiz-submit'),
     menuToggle: document.querySelector('.menu-toggle'),
@@ -134,9 +138,21 @@
       const isPrimary = group.dataset.serviceGroup === state.context;
       group.classList.toggle('is-primary', isPrimary);
       group.classList.toggle('is-secondary', !isPrimary);
+      group.hidden = !isPrimary;
+      group.setAttribute('aria-hidden', String(!isPrimary));
       const label = group.querySelector('.group-title span');
-      if (label) label.textContent = isPrimary ? 'Em destaque' : 'Outros serviços';
+      if (label) label.textContent = 'Em destaque';
     });
+
+    const otherContext = state.context === 'visto' ? 'veicular' : 'visto';
+    const otherLabel = otherContext === 'veicular'
+      ? 'Também atendemos documentação veicular'
+      : 'Também atendemos visto e passaporte';
+    const otherIcon = otherContext === 'veicular' ? '#icon-car' : '#icon-plane';
+
+    elements.otherContextLink.dataset.otherContext = otherContext;
+    elements.otherContextLink.querySelector('span').textContent = otherLabel;
+    elements.otherContextLink.querySelector('use').setAttribute('href', otherIcon);
   }
 
   function renderQuiz() {
@@ -175,7 +191,7 @@
     });
   }
 
-  function setContext(context, { track = true, updateUrl = true } = {}) {
+  function applyContext(context, { track = true, updateUrl = true } = {}) {
     if (!CONTEXTS[context]) return;
     state.context = context;
     const config = CONTEXTS[context];
@@ -194,6 +210,8 @@
       tab.tabIndex = isActive ? 0 : -1;
     });
     elements.heroPanel.setAttribute('aria-labelledby', `tab-${context}`);
+    elements.servicesPanel.setAttribute('aria-labelledby', `services-tab-${context}`);
+    elements.quizForm.setAttribute('aria-labelledby', `quiz-tab-${context}`);
 
     updateServicePriority();
     updateStandardWhatsAppLinks();
@@ -216,22 +234,50 @@
     }
   }
 
-  elements.tabs.forEach((tab, index) => {
+  function setContext(context, options = {}) {
+    if (!CONTEXTS[context]) return;
+    const isInitialSetup = options.track === false;
+    if (!isInitialSetup && context === state.context) return;
+
+    const contentBlocks = document.querySelectorAll('.context-content');
+    if (isInitialSetup || reduceMotion) {
+      applyContext(context, options);
+      return;
+    }
+
+    window.clearTimeout(contextTransitionTimer);
+    contentBlocks.forEach((block) => block.classList.add('is-switching'));
+    contextTransitionTimer = window.setTimeout(() => {
+      applyContext(context, options);
+      window.requestAnimationFrame(() => {
+        contentBlocks.forEach((block) => block.classList.remove('is-switching'));
+      });
+    }, 140);
+  }
+
+  elements.tabs.forEach((tab) => {
     tab.addEventListener('click', () => setContext(tab.dataset.context));
     tab.addEventListener('keydown', (event) => {
       const keys = ['ArrowLeft', 'ArrowRight', 'Home', 'End'];
       if (!keys.includes(event.key)) return;
       event.preventDefault();
 
-      let targetIndex = index;
-      if (event.key === 'ArrowRight') targetIndex = (index + 1) % elements.tabs.length;
-      if (event.key === 'ArrowLeft') targetIndex = (index - 1 + elements.tabs.length) % elements.tabs.length;
-      if (event.key === 'Home') targetIndex = 0;
-      if (event.key === 'End') targetIndex = elements.tabs.length - 1;
+      const localTabs = [...tab.closest('[role="tablist"]').querySelectorAll('[role="tab"][data-context]')];
+      const index = localTabs.indexOf(tab);
 
-      elements.tabs[targetIndex].focus();
-      setContext(elements.tabs[targetIndex].dataset.context);
+      let targetIndex = index;
+      if (event.key === 'ArrowRight') targetIndex = (index + 1) % localTabs.length;
+      if (event.key === 'ArrowLeft') targetIndex = (index - 1 + localTabs.length) % localTabs.length;
+      if (event.key === 'Home') targetIndex = 0;
+      if (event.key === 'End') targetIndex = localTabs.length - 1;
+
+      localTabs[targetIndex].focus();
+      setContext(localTabs[targetIndex].dataset.context);
     });
+  });
+
+  elements.otherContextLink.addEventListener('click', () => {
+    setContext(elements.otherContextLink.dataset.otherContext);
   });
 
   document.querySelectorAll('.js-whatsapp').forEach((link) => {
@@ -409,19 +455,19 @@
 
   function initializePreloader() {
     const preloader = document.querySelector('.preloader');
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const delay = reduceMotion ? 0 : 380;
+    const delay = reduceMotion ? 0 : 1050;
 
     window.setTimeout(() => {
       preloader.classList.add('is-hidden');
       document.documentElement.classList.add('is-ready');
+      window.setTimeout(() => preloader.remove(), reduceMotion ? 0 : 450);
     }, delay);
   }
 
   function updateFloatingButton() {
     if (!elements.floatingWhatsApp) return;
 
-    const blockingSections = document.querySelectorAll('#pre-atendimento, .final-cta, .footer');
+    const blockingSections = document.querySelectorAll('#servicos, #especialista, #avaliacoes, #pre-atendimento, #localizacao, .final-cta, .footer');
     const hasBlockingSectionInView = [...blockingSections].some((section) => {
       const rect = section.getBoundingClientRect();
       return rect.top < window.innerHeight && rect.bottom > window.innerHeight * 0.45;

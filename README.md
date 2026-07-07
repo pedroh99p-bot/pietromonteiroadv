@@ -9,9 +9,8 @@ index.html
 css/style.css
 js/main.js
 assets/
-  placeholder-logo.svg
-  placeholder-andre-hero.svg
-  placeholder-andre-especialista.svg
+  logo-andre-fernandes.webp
+  andre-fernandes.webp
   placeholder-map.svg
 robots.txt
 sitemap.xml
@@ -44,9 +43,8 @@ Todos os caminhos internos são relativos e funcionam em repositórios publicado
 
 ## Substituir os assets
 
-- `assets/placeholder-logo.svg`: logo principal e favicon.
-- `assets/placeholder-andre-hero.svg`: foto recortada usada no hero. Preserve uma proporção próxima de 5:6 e fundo transparente.
-- `assets/placeholder-andre-especialista.svg`: foto da seção do especialista. Preserve proporção próxima de 8:9.
+- `assets/logo-andre-fernandes.webp`: logo circular principal, usada na navegação, preloader e watermarks.
+- `assets/andre-fernandes.webp`: foto recortada usada no hero e na seção do especialista.
 - `assets/placeholder-map.svg`: imagem estática do mapa. Pode ser trocada por WebP otimizado.
 
 Se o nome ou a extensão dos arquivos mudar, atualize as referências em `index.html` e `css/style.css`. Mantenha `width` e `height` nas tags de imagem para evitar mudanças de layout.
@@ -126,7 +124,7 @@ Sem parâmetro, a última escolha da sessão é usada; se não houver escolha, o
 
 ## Checklist antes de publicar
 
-- Inserir logo e fotos finais otimizadas.
+- Revisar o recorte e o posicionamento da logo e da foto em aparelhos reais.
 - Confirmar nome empresarial, endereço, telefone e Instagram.
 - Confirmar nota e quantidade de avaliações.
 - Inserir link direto das avaliações e link oficial de rotas.
