@@ -26,7 +26,7 @@
   <meta name="twitter:image" content="https://SEU-DOMINIO.com/assets/andre-fernandes.webp">
 
   <link rel="preload" href="assets/andre-fernandes.webp" as="image" type="image/webp">
-  <link rel="stylesheet" href="css/style.css?v=5">
+  <link rel="stylesheet" href="css/style.css?v=7">
   <script>document.documentElement.classList.replace('no-js', 'js');</script>
 
   <!-- Google Tag Manager: substitua GTM-XXXXXXX e descomente na publicação.
@@ -131,9 +131,11 @@
         <img src="assets/logo-andre-fernandes.webp" width="1080" height="1080" alt="Logo de André Fernandes Documentalista">
         <span><strong>ANDRÉ FERNANDES</strong><small>DOCUMENTALISTA</small></span>
       </a>
-      <button class="mini-switch" type="button" data-mini-switch aria-label="Alternar para o modo Veicular" title="Alternar para Veicular">
-        <svg aria-hidden="true"><use href="#icon-plane"></use></svg><span class="mini-switch__dot"></span>
-      </button>
+      <div class="mini-switch" role="tablist" aria-label="Alternar especialidade">
+        <span class="mini-switch__bubble" aria-hidden="true"></span>
+        <button class="mini-switch__option is-active" id="nav-tab-visto" type="button" role="tab" aria-selected="true" aria-controls="hero-panel" tabindex="0" data-context="visto" aria-label="Ativar modo Visto" title="Visto"><svg aria-hidden="true"><use href="#icon-plane"></use></svg></button>
+        <button class="mini-switch__option" id="nav-tab-veicular" type="button" role="tab" aria-selected="false" aria-controls="hero-panel" tabindex="-1" data-context="veicular" aria-label="Ativar modo Veicular" title="Veicular"><svg aria-hidden="true"><use href="#icon-car"></use></svg></button>
+      </div>
     </div>
   </header>
 
@@ -335,11 +337,11 @@
         <div class="carousel-shell review-carousel" data-carousel>
           <button class="carousel-arrow carousel-arrow--prev" type="button" data-carousel-prev aria-label="Avaliação anterior"><span aria-hidden="true">‹</span></button>
           <div class="card-grid card-grid--3 review-grid carousel-track">
-            <article class="review-card reveal"><div class="review-source"><img src="assets/google-icon.webp" width="512" height="512" alt="Google"><span aria-label="5 de 5 estrelas">★★★★★</span></div><p>“Atendimento claro e muito ágil.”</p><small>Avaliação do Google</small></article>
-            <article class="review-card reveal"><div class="review-source"><img src="assets/google-icon.webp" width="512" height="512" alt="Google"><span aria-label="5 de 5 estrelas">★★★★★</span></div><p>“Explicou cada etapa com atenção.”</p><small>Avaliação do Google</small></article>
-            <article class="review-card reveal"><div class="review-source"><img src="assets/google-icon.webp" width="512" height="512" alt="Google"><span aria-label="5 de 5 estrelas">★★★★★</span></div><p>“Passou segurança do início ao fim.”</p><small>Avaliação do Google</small></article>
-            <article class="review-card reveal"><div class="review-source"><img src="assets/google-icon.webp" width="512" height="512" alt="Google"><span aria-label="5 de 5 estrelas">★★★★★</span></div><p>“Atendimento direto e cuidadoso.”</p><small>Avaliação do Google</small></article>
-            <article class="review-card reveal"><div class="review-source"><img src="assets/google-icon.webp" width="512" height="512" alt="Google"><span aria-label="5 de 5 estrelas">★★★★★</span></div><p>“Me orientou em cada fase do processo.”</p><small>Avaliação do Google</small></article>
+            <article class="review-card reveal"><div class="review-source"><img src="assets/google-icon.webp" width="512" height="512" alt="Google"><span aria-label="5 de 5 estrelas">★★★★★</span></div><div class="review-client"><span aria-hidden="true">01</span><div><strong>Cliente 01</strong><em>Atendimento documental</em></div></div><p>“Atendimento claro, muito ágil e com orientações objetivas desde o primeiro contato.”</p><small>Avaliação do Google</small></article>
+            <article class="review-card reveal"><div class="review-source"><img src="assets/google-icon.webp" width="512" height="512" alt="Google"><span aria-label="5 de 5 estrelas">★★★★★</span></div><div class="review-client"><span aria-hidden="true">02</span><div><strong>Cliente 02</strong><em>Orientação documental</em></div></div><p>“Explicou cada etapa com atenção e deixou todo o processo muito mais claro.”</p><small>Avaliação do Google</small></article>
+            <article class="review-card reveal"><div class="review-source"><img src="assets/google-icon.webp" width="512" height="512" alt="Google"><span aria-label="5 de 5 estrelas">★★★★★</span></div><div class="review-client"><span aria-hidden="true">03</span><div><strong>Cliente 03</strong><em>Suporte no processo</em></div></div><p>“Passou segurança do início ao fim e respondeu minhas dúvidas com clareza.”</p><small>Avaliação do Google</small></article>
+            <article class="review-card reveal"><div class="review-source"><img src="assets/google-icon.webp" width="512" height="512" alt="Google"><span aria-label="5 de 5 estrelas">★★★★★</span></div><div class="review-client"><span aria-hidden="true">04</span><div><strong>Cliente 04</strong><em>Atendimento direto</em></div></div><p>“Atendimento direto, cuidadoso e com acompanhamento próximo em todas as etapas.”</p><small>Avaliação do Google</small></article>
+            <article class="review-card reveal"><div class="review-source"><img src="assets/google-icon.webp" width="512" height="512" alt="Google"><span aria-label="5 de 5 estrelas">★★★★★</span></div><div class="review-client"><span aria-hidden="true">05</span><div><strong>Cliente 05</strong><em>Conferência de documentos</em></div></div><p>“Recebi orientação em cada fase e consegui organizar os documentos sem retrabalho.”</p><small>Avaliação do Google</small></article>
           </div>
           <button class="carousel-arrow carousel-arrow--next" type="button" data-carousel-next aria-label="Próxima avaliação"><span aria-hidden="true">›</span></button>
           <div class="carousel-dots" aria-label="Posição do carrossel"></div>
@@ -384,7 +386,7 @@
           <a class="button button--primary js-routes" href="https://www.google.com/maps/search/?api=1&amp;query=Av.%20das%20Am%C3%A9ricas%2C%203443%2C%20Barra%20da%20Tijuca%2C%20Rio%20de%20Janeiro" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#icon-pin"></use></svg> Ver rotas</a>
           <a class="button button--outline js-whatsapp" href="https://wa.me/5521983006641" target="_blank" rel="noopener" data-cta-location="location" data-service-name="atendimento_geral">Falar no WhatsApp</a>
         </div></div>
-        <div class="map-card reveal"><iframe src="https://www.google.com/maps?q=Av.%20das%20Am%C3%A9ricas%2C%203443%20Barra%20da%20Tijuca%20Rio%20de%20Janeiro&amp;output=embed" title="Mapa do escritório de André Fernandes na Barra da Tijuca" width="720" height="500" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe><span><svg aria-hidden="true"><use href="#icon-pin"></use></svg> Av. das Américas, 3443</span></div>
+        <div class="map-card reveal"><iframe src="https://www.google.com/maps?q=Av.%20das%20Am%C3%A9ricas%2C%203443%20Barra%20da%20Tijuca%20Rio%20de%20Janeiro&amp;output=embed" title="Mapa do escritório de André Fernandes na Barra da Tijuca" width="100%" height="320" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe><span><svg aria-hidden="true"><use href="#icon-pin"></use></svg> Av. das Américas, 3443</span></div>
       </div>
     </section>
 
@@ -432,6 +434,6 @@
   <!-- Google Tag Manager (noscript): substituir GTM-XXXXXXX e descomentar na publicação.
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   -->
-  <script src="js/main.js?v=5" defer></script>
+  <script src="js/main.js?v=7" defer></script>
 </body>
 </html>

@@ -107,9 +107,9 @@
     otherContextLink: document.querySelector('[data-other-context]'),
     quizForm: document.querySelector('#quiz-form'),
     quizSubmit: document.querySelector('#quiz-submit'),
-    miniSwitch: document.querySelector('[data-mini-switch]'),
     contextDecorations: [...document.querySelectorAll('[data-context-decoration]')],
-    floatingActions: document.querySelector('.floating-actions')
+    floatingActions: document.querySelector('.floating-actions'),
+    siteHeader: document.querySelector('.site-header')
   };
 
   function getInitialContext() {
@@ -203,11 +203,6 @@
     elements.chip.textContent = config.chip;
     elements.secondaryCta.textContent = config.secondaryCta;
     elements.dynamicIcon.setAttribute('href', config.icon);
-    elements.miniSwitch.querySelector('use').setAttribute('href', config.icon);
-    const nextContext = context === 'visto' ? 'veicular' : 'visto';
-    const nextContextLabel = nextContext === 'visto' ? 'Visto' : 'Veicular';
-    elements.miniSwitch.setAttribute('aria-label', `Alternar para o modo ${nextContextLabel}`);
-    elements.miniSwitch.title = `Alternar para ${nextContextLabel}`;
     elements.contextDecorations.forEach((icon) => icon.setAttribute('href', config.icon));
 
     elements.tabs.forEach((tab) => {
@@ -286,10 +281,6 @@
 
   elements.otherContextLink.addEventListener('click', () => {
     setContext(elements.otherContextLink.dataset.otherContext);
-  });
-
-  elements.miniSwitch.addEventListener('click', () => {
-    setContext(state.context === 'visto' ? 'veicular' : 'visto');
   });
 
   document.querySelectorAll('.js-whatsapp').forEach((link) => {
@@ -598,7 +589,14 @@
     elements.floatingActions.classList.toggle('is-visible', window.scrollY > 500 && !hasBlockingSectionInView);
   }
 
-  window.addEventListener('scroll', updateFloatingButton, { passive: true });
+  function updateStickyHeader() {
+    elements.siteHeader.classList.toggle('is-scrolled', window.scrollY > 24);
+  }
+
+  window.addEventListener('scroll', () => {
+    updateStickyHeader();
+    updateFloatingButton();
+  }, { passive: true });
   window.addEventListener('resize', () => {
     refreshCarousels();
     updateFloatingButton();
@@ -610,6 +608,7 @@
   initializePreloader();
   initializeReveals();
   initializeCounters();
+  updateStickyHeader();
   updateFloatingButton();
   document.querySelector('#current-year').textContent = String(new Date().getFullYear());
 })();
