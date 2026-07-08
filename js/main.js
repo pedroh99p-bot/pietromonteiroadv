@@ -1,30 +1,28 @@
 (() => {
   'use strict';
 
-  const WHATSAPP_NUMBER = '5521965960143';
+  const WHATSAPP_URL = 'https://wa.me/message/GRJNWYSXDF64D1';
   const PAGE_TYPE = 'landing';
-  const WHATSAPP_BASE_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
-  const DEFAULT_WHATSAPP_MESSAGE = 'Olá, vim pelo site da Amaro e preciso de informações sobre exame toxicológico.';
-  const CHATBOT_WHATSAPP_MESSAGE = 'Olá, vim pelo site da Amaro, usei o mini assistente e gostaria de continuar o atendimento pelo WhatsApp.';
-  const INSTAGRAM_URL = 'https://www.instagram.com/amaro_exames_toxicologico/';
-  const GOOGLE_URL = 'https://www.google.com/search?q=Amaro+Exame+Toxicol%C3%B3gico+DETRAN';
-  const ROUTES_URL = 'https://www.google.com/maps/search/?api=1&query=Estr.%20Rio%20S%C3%A3o%20Paulo%2C%203783%20-%20Loja%20A%20-%20Campo%20Grande%2C%20Rio%20de%20Janeiro%20-%20RJ%2C%2023075-247';
+  const DEFAULT_WHATSAPP_MESSAGE = 'Olá, Pietro. Vim pelo site e gostaria de orientação jurídica para CAC.';
+  const CHATBOT_WHATSAPP_MESSAGE = 'Olá, Pietro. Vim pelo site, usei o mini assistente e gostaria de continuar o atendimento pelo WhatsApp.';
+  const INSTAGRAM_URL = 'https://www.instagram.com/pietromonteiro.adv/';
+  const PARTNER_INSTAGRAM_URL = 'https://www.instagram.com/mil.armas/?hl=pt';
 
   const CHATBOT_RESPONSES = {
-    prazo_laudo: {
-      answer: 'O prazo informado é de 3 a 5 dias úteis, conforme o atendimento.'
+    atende_cacs: {
+      answer: 'Sim. O atendimento é voltado a soluções jurídicas para CACs e demandas relacionadas aos órgãos competentes.'
     },
-    atende_detran: {
-      answer: 'Sim. A Amaro atende demandas de exame toxicológico relacionadas ao DETRAN e documentação.'
+    policia_federal: {
+      answer: 'Sim. É possível solicitar orientação jurídica sobre demandas administrativas relacionadas à Polícia Federal.'
     },
-    funciona_24h: {
-      answer: 'O perfil da empresa informa atendimento aberto 24 horas. Chame no WhatsApp para confirmar o melhor horário.'
+    exercito: {
+      answer: 'Sim. O atendimento pode envolver análise e acompanhamento de demandas relacionadas ao Exército, conforme o caso.'
     },
-    onde_fica: {
-      answer: 'A unidade fica na Estr. Rio São Paulo, 3783 - Loja A - Campo Grande, Rio de Janeiro.'
+    garante_aprovacao: {
+      answer: 'Não. Cada caso depende da análise dos órgãos competentes. O atendimento jurídico busca orientação, regularidade e defesa adequada dos interesses do cliente.'
     },
-    como_comeco: {
-      answer: 'Você pode chamar no WhatsApp e informar qual exame ou atendimento precisa.'
+    atendimento_nacional: {
+      answer: 'Sim. O perfil informa atendimento nacional. O primeiro contato pode ser feito pelo WhatsApp.'
     }
   };
 
@@ -42,12 +40,7 @@
     });
   }
 
-  function buildWhatsAppUrl(message) {
-    return `${WHATSAPP_BASE_URL}?text=${encodeURIComponent(message)}`;
-  }
-
   window.trackEvent = trackEvent;
-  window.buildWhatsAppUrl = buildWhatsAppUrl;
 
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const carouselControllers = [];
@@ -66,6 +59,7 @@
     quizForm: document.querySelector('#quiz-form'),
     quizSubmit: document.querySelector('#quiz-submit'),
     quizStatus: document.querySelector('[data-quiz-status]'),
+    quizPreview: document.querySelector('[data-quiz-message-preview]'),
     chatbotPanel: document.querySelector('#mini-chatbot'),
     chatbotToggle: document.querySelector('.js-chatbot-toggle'),
     chatbotClose: document.querySelector('.js-chatbot-close'),
@@ -87,7 +81,7 @@
     if (link.dataset.whatsappMessage) return link.dataset.whatsappMessage;
 
     if (link.classList.contains('js-service')) {
-      return `Olá, vim pelo site da Amaro e preciso de informações sobre ${link.dataset.serviceLabel}.`;
+      return `Olá, Pietro. Vim pelo site e gostaria de orientação jurídica sobre ${link.dataset.serviceLabel}.`;
     }
 
     return DEFAULT_WHATSAPP_MESSAGE;
@@ -95,7 +89,8 @@
 
   function syncWhatsAppLinks() {
     document.querySelectorAll('.js-whatsapp').forEach((link) => {
-      link.href = buildWhatsAppUrl(getWhatsAppMessage(link));
+      link.href = WHATSAPP_URL;
+      link.dataset.preparedMessage = getWhatsAppMessage(link);
     });
   }
 
@@ -109,14 +104,14 @@
           trackEvent('service_click', {
             service_name: serviceName,
             cta_location: ctaLocation,
-            link_url: WHATSAPP_BASE_URL
+            link_url: WHATSAPP_URL
           });
         }
 
         trackEvent('click_whatsapp', {
           service_name: serviceName,
           cta_location: ctaLocation,
-          link_url: WHATSAPP_BASE_URL
+          link_url: WHATSAPP_URL
         });
       });
     });
@@ -131,25 +126,19 @@
       });
     });
 
-    document.querySelector('.js-routes')?.addEventListener('click', () => {
-      trackEvent('click_routes', {
-        service_name: 'location',
-        cta_location: 'location',
-        link_url: ROUTES_URL
-      });
-    });
-
-    document.querySelector('.js-review')?.addEventListener('click', () => {
-      trackEvent('review_click', {
-        service_name: 'google_reviews',
-        cta_location: 'reviews',
-        link_url: GOOGLE_URL
+    document.querySelectorAll('.js-partner-instagram').forEach((link) => {
+      link.addEventListener('click', () => {
+        trackEvent('click_partner_instagram', {
+          service_name: 'mil_armas_rj',
+          cta_location: link.dataset.ctaLocation || 'unknown',
+          link_url: PARTNER_INSTAGRAM_URL
+        });
       });
     });
   }
 
   function initializeQuiz() {
-    if (!elements.quizForm || !elements.quizSubmit || !elements.quizStatus) return;
+    if (!elements.quizForm || !elements.quizSubmit || !elements.quizStatus || !elements.quizPreview) return;
 
     elements.quizForm.querySelectorAll('.quiz-option').forEach((option) => {
       option.setAttribute('aria-pressed', 'false');
@@ -203,15 +192,15 @@
         service_name: service || 'pre_atendimento',
         cta_location: 'quiz',
         quiz_step: 2,
-        quiz_question: 'urgencia',
+        quiz_question: 'situacao',
         quiz_answer: situation || '',
-        link_url: WHATSAPP_BASE_URL
+        link_url: WHATSAPP_URL
       });
 
       trackEvent('click_whatsapp', {
         service_name: service || 'pre_atendimento',
         cta_location: 'quiz',
-        link_url: WHATSAPP_BASE_URL
+        link_url: WHATSAPP_URL
       });
     });
   }
@@ -224,15 +213,21 @@
       elements.quizStatus.textContent = service
         ? 'Agora selecione uma opção na segunda etapa.'
         : 'Selecione uma opção em cada etapa.';
+      elements.quizPreview.hidden = true;
+      elements.quizPreview.textContent = '';
       elements.quizSubmit.classList.add('is-disabled');
       elements.quizSubmit.setAttribute('aria-disabled', 'true');
-      elements.quizSubmit.href = buildWhatsAppUrl(DEFAULT_WHATSAPP_MESSAGE);
+      elements.quizSubmit.href = WHATSAPP_URL;
+      elements.quizSubmit.dataset.preparedMessage = DEFAULT_WHATSAPP_MESSAGE;
       return;
     }
 
-    const message = `Olá, vim pelo site da Amaro e preciso de informações sobre ${service.value}. Minha situação: ${situation.value}.`;
-    elements.quizStatus.textContent = 'Pronto. Continue o atendimento no WhatsApp.';
-    elements.quizSubmit.href = buildWhatsAppUrl(message);
+    const message = `Olá, Pietro. Vim pelo site e gostaria de orientação jurídica sobre ${service.value}. Minha situação: ${situation.value}.`;
+    elements.quizStatus.textContent = 'Mensagem preparada. Continue o atendimento no WhatsApp.';
+    elements.quizPreview.hidden = false;
+    elements.quizPreview.textContent = `Mensagem preparada: "${message}"`;
+    elements.quizSubmit.href = WHATSAPP_URL;
+    elements.quizSubmit.dataset.preparedMessage = message;
     elements.quizSubmit.classList.remove('is-disabled');
     elements.quizSubmit.setAttribute('aria-disabled', 'false');
   }
@@ -281,7 +276,8 @@
   function initializeChatbot() {
     if (!elements.chatbotPanel || !elements.chatbotWhatsApp) return;
 
-    elements.chatbotWhatsApp.href = buildWhatsAppUrl(CHATBOT_WHATSAPP_MESSAGE);
+    elements.chatbotWhatsApp.href = WHATSAPP_URL;
+    elements.chatbotWhatsApp.dataset.preparedMessage = CHATBOT_WHATSAPP_MESSAGE;
 
     elements.chatbotToggle?.addEventListener('click', () => {
       if (state.chatbotOpen) closeChatbot();
@@ -299,7 +295,8 @@
         state.activeChatbotQuestion = questionId;
         elements.chatbotQuestions.forEach((item) => item.classList.toggle('is-active', item === button));
         elements.chatbotAnswer.textContent = response.answer;
-        elements.chatbotWhatsApp.href = buildWhatsAppUrl(CHATBOT_WHATSAPP_MESSAGE);
+        elements.chatbotWhatsApp.href = WHATSAPP_URL;
+        elements.chatbotWhatsApp.dataset.preparedMessage = CHATBOT_WHATSAPP_MESSAGE;
 
         trackEvent('chatbot_question_click', {
           question_id: questionId,
@@ -312,14 +309,14 @@
       trackEvent('chatbot_whatsapp_click', {
         question_id: state.activeChatbotQuestion || 'generic',
         cta_location: 'chatbot',
-        link_url: WHATSAPP_BASE_URL
+        link_url: WHATSAPP_URL
       });
 
       trackEvent('click_whatsapp', {
         service_name: 'chatbot',
         cta_location: 'chatbot',
         question_id: state.activeChatbotQuestion || 'generic',
-        link_url: WHATSAPP_BASE_URL
+        link_url: WHATSAPP_URL
       });
     });
 
@@ -488,7 +485,7 @@
   function initializePreloader() {
     if (!elements.preloader) return;
 
-    const delay = reduceMotion ? 0 : 1050;
+    const delay = reduceMotion ? 0 : 980;
 
     window.setTimeout(() => {
       elements.preloader.classList.add('is-hidden');

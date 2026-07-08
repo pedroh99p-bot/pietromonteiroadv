@@ -1,129 +1,76 @@
-# Landing page — Amaro Consultoria e Toxicológico
+# Pietro Monteiro Landing Page
 
-Landing page estática, mobile-first e sem build para GitHub Pages. O projeto usa apenas HTML, CSS e JavaScript nativos, com foco em conversão via WhatsApp, SEO local, performance em iPhone/Android e tracking em `dataLayer`.
+Landing page estática em HTML, CSS e JavaScript puro para GitHub Pages, com foco em captação responsável via WhatsApp para soluções jurídicas relacionadas ao universo CAC.
 
 ## Estrutura
 
-```text
-index.html
-css/style.css
-js/main.js
-assets/
-  logo-amaro.webp
-  amaro-hero.webp
-  amaro-specialist.webp
-  google-icon.webp
-robots.txt
-sitemap.xml
-```
+- `index.html`
+  Página principal, SEO, schema, FAQ visível, hero, serviços, quiz, especialista, parceria, autoridade, FAQ, CTA final, footer e botões flutuantes.
+- `css/style.css`
+  Tema premium preto/grafite/prata/dourado, layout mobile-first, hero em duas colunas também no mobile, carrossel, chatbot, animações e responsividade.
+- `js/main.js`
+  Tracking `dataLayer`, quiz, chatbot, carrossel, reveal animations, counters e preloader.
+- `assets/`
+  Logos, fotos e ícones usados na landing.
 
-## Executar localmente
+## Assets usados
 
-O `index.html` funciona direto no navegador, mas o ideal é usar um servidor estático simples na raiz.
+- `assets/logo-pietro-monteiro.webp`
+  Logo principal usada na navbar, preloader, watermark do hero, watermark da seção especialista, favicon e footer.
+- `assets/pietro-hero.webp`
+  Foto principal do hero.
+- `assets/pietro-specialist.webp`
+  Foto principal da seção especialista.
+- `assets/logo-mil-armas-rj.webp`
+  Logo da seção de parceria Mil Armas RJ.
+- `assets/google-icon.webp`
+  Ícone visual para destacar os dados públicos do Mil Armas na seção de parceria.
 
-Exemplos:
+## Onde trocar assets
 
-```powershell
-python -m http.server 8000
-```
+- Navbar / preloader / watermark / favicon:
+  [index.html](C:/Users/pedro/Documents/André Fernandes LP/index.html)
+  Procure por `logo-pietro-monteiro.webp`.
+- Hero:
+  Procure por `pietro-hero.webp`.
+- Seção especialista:
+  Procure por `pietro-specialist.webp`.
+- Parceria Mil Armas:
+  Procure por `logo-mil-armas-rj.webp`.
+- Open Graph / Twitter image:
+  Atualize as metas no `<head>` em [index.html](C:/Users/pedro/Documents/André Fernandes LP/index.html).
 
-ou
+## Onde alterar links
 
-```powershell
-npx serve .
-```
+- WhatsApp principal:
+  [js/main.js](C:/Users/pedro/Documents/André Fernandes LP/js/main.js)
+  Constante `WHATSAPP_URL`.
+- Instagram do Pietro:
+  [js/main.js](C:/Users/pedro/Documents/André Fernandes LP/js/main.js)
+  Constante `INSTAGRAM_URL`.
+- Instagram do Mil Armas:
+  [js/main.js](C:/Users/pedro/Documents/André Fernandes LP/js/main.js)
+  Constante `PARTNER_INSTAGRAM_URL`.
 
-Depois acesse:
+Os links no HTML também já apontam para esses destinos e são sincronizados novamente pelo JS.
 
-- `http://localhost:8000/`
+## Como funciona o WhatsApp
 
-## Assets atuais
+O projeto usa `https://wa.me/message/GRJNWYSXDF64D1` como link principal de contato.
 
-- `assets/logo-amaro.webp`: logo principal usada em navbar, preloader, watermarks, favicon e blocos institucionais.
-- `assets/amaro-hero.webp`: imagem recortada com fundo transparente usada no hero.
-- `assets/amaro-specialist.webp`: retrato usado na seção institucional da Amaro e no Open Graph.
-- `assets/google-icon.webp`: ícone usado na seção Google e nos cards de avaliações.
+Como esse formato não usa número direto, as mensagens personalizadas:
 
-Se algum nome ou extensão mudar, atualize as referências em `index.html`.
+- continuam preparadas no JS via `data-prepared-message`;
+- aparecem visualmente no quiz quando o usuário conclui as respostas;
+- podem ser migradas facilmente para URL com `text=` no futuro, caso um número completo seja informado.
 
-## Onde alterar contatos e links
+## Tracking e dataLayer
 
-### WhatsApp
-
-O número principal está centralizado em `js/main.js`:
-
-```js
-const WHATSAPP_NUMBER = '5521965960143';
-```
-
-Mensagens padrão também ficam em `js/main.js`:
-
-- `DEFAULT_WHATSAPP_MESSAGE`
-- `CHATBOT_WHATSAPP_MESSAGE`
-
-Mensagens específicas podem ser alteradas direto no HTML com `data-whatsapp-message`.
-
-### Instagram
-
-Atualize em:
-
-- `index.html`: links com classe `.js-instagram`
-- `js/main.js`: constante `INSTAGRAM_URL`
-
-### Google
-
-O link do botão “Ver no Google” está em:
-
-- `index.html`: botão com classe `.js-review`
-- `js/main.js`: constante `GOOGLE_URL`
-
-### Endereço
-
-Atualize em:
-
-- `index.html`: seção `#localizacao`, rodapé e `iframe` do mapa
-- `js/main.js`: constante `ROUTES_URL`
-- `index.html`: JSON-LD no `<head>`
-
-## SEO e URLs finais
-
-A URL esperada para GitHub Pages é:
-
-- `https://pedroh99p-bot.github.io/amarodespachante/`
-
-Se isso mudar, atualize:
-
-- `index.html`: canonical, Open Graph, Twitter e JSON-LD
-- `robots.txt`
-- `sitemap.xml`
-
-O favicon atual usa a própria logo da Amaro. Se você trocar o favicon ou a imagem de Open Graph, ajuste o `<head>` em `index.html`.
-
-## Schema
-
-O projeto usa:
-
-- `LocalBusiness` com nome, telefone, endereço e horário informado
-- `FAQPage` baseado nas perguntas visíveis na página
-
-Não há `aggregateRating` no schema.
-
-## Tracking / dataLayer
-
-O site inicializa `window.dataLayer` em `js/main.js` e expõe:
-
-```js
-trackEvent(eventName, eventParams)
-buildWhatsAppUrl(message)
-```
-
-Eventos atuais:
+Eventos mantidos:
 
 - `click_whatsapp`
 - `click_instagram`
-- `click_routes`
 - `service_click`
-- `faq_open`
 - `quiz_start`
 - `quiz_answer`
 - `quiz_submit`
@@ -131,33 +78,82 @@ Eventos atuais:
 - `chatbot_close`
 - `chatbot_question_click`
 - `chatbot_whatsapp_click`
-- `review_click`
+- `faq_open`
 
-### Testar eventos no console
+Evento adicionado:
 
-1. Abra a página com DevTools.
-2. Rode `window.dataLayer`.
-3. Execute uma interação.
-4. Rode `window.dataLayer.at(-1)` para inspecionar o último evento.
+- `click_partner_instagram`
 
-## Publicar no GitHub Pages
+Contrato enviado:
 
-1. Envie os arquivos para a branch `main`.
+- `event`
+- `service_name`
+- `cta_location`
+- `link_url`
+- `question_id`
+- `quiz_step`
+- `quiz_question`
+- `quiz_answer`
+- `page_type`
+
+## Como testar o dataLayer
+
+1. Abra a landing localmente.
+2. No console do navegador, rode:
+
+```js
+window.dataLayer
+```
+
+3. Clique nos CTAs, responda o quiz, abra o chatbot e expanda o FAQ.
+4. Verifique os objetos empurrados para o array.
+
+## SEO
+
+Arquivos/locais relevantes:
+
+- `<title>`, descrição, canonical, OG e Twitter:
+  [index.html](C:/Users/pedro/Documents/André Fernandes LP/index.html)
+- Schema `LegalService` e `FAQPage`:
+  [index.html](C:/Users/pedro/Documents/André Fernandes LP/index.html)
+- `robots.txt`:
+  [robots.txt](C:/Users/pedro/Documents/André Fernandes LP/robots.txt)
+- `sitemap.xml`:
+  [sitemap.xml](C:/Users/pedro/Documents/André Fernandes LP/sitemap.xml)
+
+## URL final do projeto
+
+URL configurada atualmente:
+
+- `https://pedroh99p-bot.github.io/pietromonteiroadv/`
+
+Se a URL pública mudar, atualize:
+
+- `canonical`
+- `og:url`
+- `og:image`
+- `twitter:image`
+- schema `@id`, `url`, `image`
+- `robots.txt`
+- `sitemap.xml`
+
+## Publicação no GitHub Pages
+
+1. Envie o branch para o repositório remoto.
 2. No GitHub, abra `Settings > Pages`.
-3. Em `Build and deployment`, selecione `Deploy from a branch`.
-4. Escolha `main` e a pasta `/ (root)`.
-5. Salve e aguarde a publicação.
+3. Configure a origem para o branch principal (`main`) e a raiz do repositório.
+4. Aguarde a publicação.
 
-URL esperada:
+## Servidor local simples
 
-- `https://pedroh99p-bot.github.io/amarodespachante/`
+Com Python:
 
-## Checklist antes de publicar
+```powershell
+C:\Users\pedro\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\python.exe -m http.server 8000
+```
 
-- Validar a composição do hero em iPhone pequeno e Android narrow.
-- Confirmar visual do bloco Google e consistência dos cards de avaliações.
-- Testar mapa, botão de rotas e link do Google em aparelho real.
-- Revisar compartilhamento do Open Graph.
-- Confirmar dados exibidos na página com o cliente.
-- Ativar GTM só quando o ID final estiver definido.
-- Criar páginas reais de Política de Privacidade e Termos de Uso antes de campanhas pagas.
+Depois acesse:
+
+```text
+http://127.0.0.1:8000/
+```
