@@ -1,67 +1,30 @@
 (() => {
   'use strict';
 
-  const WHATSAPP_NUMBER = '5521983006641';
+  const WHATSAPP_NUMBER = '5534992524138';
   const PAGE_TYPE = 'landing';
+  const WHATSAPP_BASE_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
+  const DEFAULT_WHATSAPP_MESSAGE = 'Olá, Lorena. Vim pelo site e gostaria de orientação sobre processos documentais.';
+  const CHATBOT_WHATSAPP_MESSAGE = 'Olá, Lorena. Vim pelo site, usei o mini assistente e gostaria de continuar o atendimento pelo WhatsApp.';
+  const CLUB_INSTAGRAM_URL = 'https://www.instagram.com/ctcombateurbano/';
+  const INSTAGRAM_URL = 'https://www.instagram.com/despachantedearmass/';
 
-  const CONTEXTS = {
-    visto: {
-      headline: 'Visto americano, passaporte e orientação documental privada.',
-      subheadline: 'Atendimento direto com André Fernandes para reduzir erros, trazer clareza ao processo e ajudar você a avançar com mais segurança.',
-      chip: 'Assessoria documental privada',
-      secondaryCta: 'Ver serviços de Visto',
-      icon: '#icon-plane',
-      whatsappMessage: 'Olá, André. Vim pelo site e preciso de orientação sobre visto ou passaporte.',
-      quiz: {
-        question1: 'O que você precisa?',
-        options1: [
-          { value: 'visto_americano', label: 'Visto americano' },
-          { value: 'passaporte', label: 'Passaporte' },
-          { value: 'outro', label: 'Outro' }
-        ],
-        question2: 'Qual é o objetivo?',
-        options2: [
-          { value: 'turismo', label: 'Turismo' },
-          { value: 'estudo', label: 'Estudo' },
-          { value: 'trabalho', label: 'Trabalho' },
-          { value: 'outro', label: 'Outro' }
-        ],
-        buildMessage: (answer1, answer2) => `Olá, André. Vim pelo site e preciso de orientação sobre ${answer1}. Meu objetivo é ${answer2}.`
-      }
+  const CHATBOT_RESPONSES = {
+    vende_armas: {
+      answer: 'Não. O atendimento é voltado para orientação e assessoria documental dentro das normas.'
     },
-    veicular: {
-      headline: 'Documentação veicular, transferência e regularização sem complicação.',
-      subheadline: 'Atendimento direto para quem precisa comprar, vender, transferir ou regularizar documentos do veículo com mais segurança.',
-      chip: 'Suporte documental veicular',
-      secondaryCta: 'Ver serviços veiculares',
-      icon: '#icon-car',
-      whatsappMessage: 'Olá, André. Vim pelo site e preciso de ajuda com documentação veicular.',
-      quiz: {
-        question1: 'O que você precisa resolver?',
-        options1: [
-          { value: 'transferencia', label: 'Transferência' },
-          { value: 'regularizacao', label: 'Regularização' },
-          { value: 'compra_e_venda', label: 'Compra e venda' },
-          { value: 'outro', label: 'Outro' }
-        ],
-        question2: 'Qual é a situação?',
-        options2: [
-          { value: 'ja_iniciei', label: 'Já iniciei' },
-          { value: 'ainda_nao_iniciei', label: 'Ainda não iniciei' },
-          { value: 'tenho_duvidas', label: 'Tenho dúvidas' }
-        ],
-        buildMessage: (answer1, answer2) => `Olá, André. Vim pelo site e preciso de ajuda com ${answer1}. Situação: ${answer2}.`
-      }
+    regularizacao: {
+      answer: 'Sim. O atendimento pode orientar sobre processos documentais e próximos passos conforme o caso.'
+    },
+    deferimento: {
+      answer: 'Não. A análise e aprovação dependem exclusivamente dos órgãos competentes.'
+    },
+    como_comeco: {
+      answer: 'Você pode chamar no WhatsApp e explicar qual processo precisa consultar.'
+    },
+    online: {
+      answer: 'O primeiro contato pode ser feito pelo WhatsApp para entender a necessidade inicial.'
     }
-  };
-
-  const SERVICE_LABELS = {
-    visto_americano: 'visto americano',
-    passaporte: 'passaporte',
-    orientacao_documental: 'orientação documental',
-    transferencia_de_veiculo: 'transferência de veículo',
-    regularizacao: 'regularização',
-    compra_e_venda: 'compra e venda'
   };
 
   window.dataLayer = window.dataLayer || [];
@@ -79,355 +42,284 @@
   }
 
   function buildWhatsAppUrl(message) {
-    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+    return `${WHATSAPP_BASE_URL}?text=${encodeURIComponent(message)}`;
   }
 
   window.trackEvent = trackEvent;
   window.buildWhatsAppUrl = buildWhatsAppUrl;
 
-  const state = {
-    context: 'visto',
-    quizAnswers: {},
-    quizStarted: false
-  };
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let contextTransitionTimer;
   const carouselControllers = [];
 
-  const elements = {
-    tabs: [...document.querySelectorAll('[role="tab"][data-context]')],
-    heroPanel: document.querySelector('#hero-panel'),
-    headline: document.querySelector('[data-dynamic="headline"]'),
-    subheadline: document.querySelector('[data-dynamic="subheadline"]'),
-    chip: document.querySelector('[data-dynamic="chip"]'),
-    secondaryCta: document.querySelector('[data-dynamic="secondary-cta"]'),
-    dynamicIcon: document.querySelector('.dynamic-icon use'),
-    serviceGroups: [...document.querySelectorAll('[data-service-group]')],
-    servicesPanel: document.querySelector('#services-panel'),
-    otherContextLink: document.querySelector('[data-other-context]'),
-    quizForm: document.querySelector('#quiz-form'),
-    quizSubmit: document.querySelector('#quiz-submit'),
-    contextDecorations: [...document.querySelectorAll('[data-context-decoration]')],
-    floatingActions: document.querySelector('.floating-actions'),
-    siteHeader: document.querySelector('.site-header')
+  const state = {
+    quizAnswers: {},
+    quizStarted: false,
+    chatbotOpen: false,
+    activeChatbotQuestion: ''
   };
 
-  function getInitialContext() {
-    const urlContext = new URLSearchParams(window.location.search).get('servico');
-    if (urlContext && CONTEXTS[urlContext]) return urlContext;
+  const elements = {
+    preloader: document.querySelector('.preloader'),
+    siteHeader: document.querySelector('.site-header'),
+    floatingActions: document.querySelector('.floating-actions'),
+    quizForm: document.querySelector('#quiz-form'),
+    quizSubmit: document.querySelector('#quiz-submit'),
+    quizStatus: document.querySelector('[data-quiz-status]'),
+    chatbotPanel: document.querySelector('#mini-chatbot'),
+    chatbotToggle: document.querySelector('.js-chatbot-toggle'),
+    chatbotClose: document.querySelector('.js-chatbot-close'),
+    chatbotQuestions: [...document.querySelectorAll('.chatbot-question')],
+    chatbotAnswer: document.querySelector('[data-chatbot-answer]'),
+    chatbotWhatsApp: document.querySelector('.js-chatbot-whatsapp')
+  };
 
-    try {
-      const storedContext = window.sessionStorage.getItem('service_context');
-      if (storedContext && CONTEXTS[storedContext]) return storedContext;
-    } catch (error) {
-      // Storage pode estar bloqueado; a experiência segue normalmente.
-    }
+  function formatCounterValue(value, decimals, suffix = '') {
+    const formatter = new Intl.NumberFormat('pt-BR', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals
+    });
 
-    return 'visto';
+    return `${formatter.format(value)}${suffix}`;
   }
 
-  function updateStandardWhatsAppLinks() {
-    const url = buildWhatsAppUrl(CONTEXTS[state.context].whatsappMessage);
+  function getWhatsAppMessage(link) {
+    if (link.dataset.whatsappMessage) return link.dataset.whatsappMessage;
+
+    if (link.classList.contains('js-service')) {
+      return `Olá, Lorena. Vim pelo site e gostaria de orientação sobre ${link.dataset.serviceLabel}.`;
+    }
+
+    return DEFAULT_WHATSAPP_MESSAGE;
+  }
+
+  function syncWhatsAppLinks() {
     document.querySelectorAll('.js-whatsapp').forEach((link) => {
-      link.href = url;
-      link.dataset.serviceType = state.context;
+      link.href = buildWhatsAppUrl(getWhatsAppMessage(link));
     });
   }
 
-  function updateServicePriority() {
-    elements.serviceGroups.forEach((group) => {
-      const isPrimary = group.dataset.serviceGroup === state.context;
-      group.classList.toggle('is-primary', isPrimary);
-      group.classList.toggle('is-secondary', !isPrimary);
-      group.hidden = !isPrimary;
-      group.setAttribute('aria-hidden', String(!isPrimary));
-      const label = group.querySelector('.group-title span');
-      if (label) label.textContent = 'Em destaque';
-    });
+  function bindTrackedLinks() {
+    document.querySelectorAll('.js-whatsapp').forEach((link) => {
+      link.addEventListener('click', () => {
+        const serviceName = link.dataset.serviceName || 'atendimento_geral';
+        const ctaLocation = link.dataset.ctaLocation || 'unknown';
 
-    const otherContext = state.context === 'visto' ? 'veicular' : 'visto';
-    const otherLabel = otherContext === 'veicular'
-      ? 'Também atendemos documentação veicular'
-      : 'Também atendemos visto e passaporte';
-    const otherIcon = otherContext === 'veicular' ? '#icon-car' : '#icon-plane';
+        if (link.classList.contains('js-service')) {
+          trackEvent('service_click', {
+            service_name: serviceName,
+            cta_location: ctaLocation,
+            link_url: WHATSAPP_BASE_URL
+          });
+        }
 
-    elements.otherContextLink.dataset.otherContext = otherContext;
-    elements.otherContextLink.querySelector('span').textContent = otherLabel;
-    elements.otherContextLink.querySelector('use').setAttribute('href', otherIcon);
-  }
-
-  function renderQuiz() {
-    const quiz = CONTEXTS[state.context].quiz;
-    state.quizAnswers = {};
-    state.quizStarted = false;
-
-    const question1 = elements.quizForm.querySelector('[data-quiz="question-1"]');
-    const question2 = elements.quizForm.querySelector('[data-quiz="question-2"]');
-    const options1 = elements.quizForm.querySelector('[data-quiz="options-1"]');
-    const options2 = elements.quizForm.querySelector('[data-quiz="options-2"]');
-
-    question1.textContent = quiz.question1;
-    question2.textContent = quiz.question2;
-    options1.replaceChildren(...createQuizOptions(quiz.options1, 1));
-    options2.replaceChildren(...createQuizOptions(quiz.options2, 2));
-
-    const status = elements.quizForm.querySelector('[data-quiz="status"]');
-    status.textContent = 'Selecione uma opção em cada etapa.';
-    elements.quizSubmit.classList.add('is-disabled');
-    elements.quizSubmit.setAttribute('aria-disabled', 'true');
-    elements.quizSubmit.href = buildWhatsAppUrl(CONTEXTS[state.context].whatsappMessage);
-  }
-
-  function createQuizOptions(options, step) {
-    return options.map((option) => {
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.className = 'quiz-option';
-      button.dataset.step = String(step);
-      button.dataset.value = option.value;
-      button.dataset.label = option.label;
-      button.setAttribute('aria-pressed', 'false');
-      button.textContent = option.label;
-      return button;
-    });
-  }
-
-  function applyContext(context, { track = true, updateUrl = true } = {}) {
-    if (!CONTEXTS[context]) return;
-    state.context = context;
-    const config = CONTEXTS[context];
-
-    document.body.dataset.theme = context;
-    elements.headline.textContent = config.headline;
-    elements.subheadline.textContent = config.subheadline;
-    elements.chip.textContent = config.chip;
-    elements.secondaryCta.textContent = config.secondaryCta;
-    elements.dynamicIcon.setAttribute('href', config.icon);
-    elements.contextDecorations.forEach((icon) => icon.setAttribute('href', config.icon));
-
-    elements.tabs.forEach((tab) => {
-      const isActive = tab.dataset.context === context;
-      tab.classList.toggle('is-active', isActive);
-      tab.setAttribute('aria-selected', String(isActive));
-      tab.tabIndex = isActive ? 0 : -1;
-    });
-    elements.heroPanel.setAttribute('aria-labelledby', `tab-${context}`);
-    elements.servicesPanel.setAttribute('aria-labelledby', `services-tab-${context}`);
-    elements.quizForm.setAttribute('aria-labelledby', `quiz-tab-${context}`);
-
-    updateServicePriority();
-    updateStandardWhatsAppLinks();
-    renderQuiz();
-    window.requestAnimationFrame(refreshCarousels);
-
-    try {
-      window.sessionStorage.setItem('service_context', context);
-    } catch (error) {
-      // Falha de storage não bloqueia o switch.
-    }
-
-    if (updateUrl) {
-      const url = new URL(window.location.href);
-      url.searchParams.set('servico', context);
-      window.history.replaceState({}, '', url);
-    }
-
-    if (track) {
-      trackEvent(`switch_${context}`, { service_type: context });
-    }
-  }
-
-  function setContext(context, options = {}) {
-    if (!CONTEXTS[context]) return;
-    const isInitialSetup = options.track === false;
-    if (!isInitialSetup && context === state.context) return;
-
-    const contentBlocks = document.querySelectorAll('.context-content');
-    if (isInitialSetup || reduceMotion) {
-      applyContext(context, options);
-      return;
-    }
-
-    window.clearTimeout(contextTransitionTimer);
-    contentBlocks.forEach((block) => block.classList.add('is-switching'));
-    contextTransitionTimer = window.setTimeout(() => {
-      applyContext(context, options);
-      window.requestAnimationFrame(() => {
-        contentBlocks.forEach((block) => block.classList.remove('is-switching'));
+        trackEvent('click_whatsapp', {
+          service_name: serviceName,
+          cta_location: ctaLocation,
+          link_url: WHATSAPP_BASE_URL
+        });
       });
-    }, 140);
+    });
+
+    document.querySelectorAll('.js-instagram').forEach((link) => {
+      link.addEventListener('click', () => {
+        trackEvent('click_instagram', {
+          service_name: 'instagram',
+          cta_location: link.dataset.ctaLocation || 'unknown',
+          link_url: INSTAGRAM_URL
+        });
+      });
+    });
+
+    document.querySelectorAll('.js-club-instagram').forEach((link) => {
+      link.addEventListener('click', () => {
+        trackEvent('click_club_instagram', {
+          service_name: 'clube_tiro',
+          cta_location: link.dataset.ctaLocation || 'unknown',
+          link_url: CLUB_INSTAGRAM_URL
+        });
+      });
+    });
   }
 
-  elements.tabs.forEach((tab) => {
-    tab.addEventListener('click', () => setContext(tab.dataset.context));
-    tab.addEventListener('keydown', (event) => {
-      const keys = ['ArrowLeft', 'ArrowRight', 'Home', 'End'];
-      if (!keys.includes(event.key)) return;
-      event.preventDefault();
+  function initializeQuiz() {
+    if (!elements.quizForm || !elements.quizSubmit || !elements.quizStatus) return;
 
-      const localTabs = [...tab.closest('[role="tablist"]').querySelectorAll('[role="tab"][data-context]')];
-      const index = localTabs.indexOf(tab);
-
-      let targetIndex = index;
-      if (event.key === 'ArrowRight') targetIndex = (index + 1) % localTabs.length;
-      if (event.key === 'ArrowLeft') targetIndex = (index - 1 + localTabs.length) % localTabs.length;
-      if (event.key === 'Home') targetIndex = 0;
-      if (event.key === 'End') targetIndex = localTabs.length - 1;
-
-      localTabs[targetIndex].focus();
-      setContext(localTabs[targetIndex].dataset.context);
+    elements.quizForm.querySelectorAll('.quiz-option').forEach((option) => {
+      option.setAttribute('aria-pressed', 'false');
     });
-  });
 
-  elements.otherContextLink.addEventListener('click', () => {
-    setContext(elements.otherContextLink.dataset.otherContext);
-  });
+    elements.quizForm.addEventListener('click', (event) => {
+      const option = event.target.closest('.quiz-option');
+      if (!option) return;
 
-  document.querySelectorAll('.js-whatsapp').forEach((link) => {
-    link.addEventListener('click', () => {
+      const step = option.dataset.step;
+      const question = option.dataset.question;
+      const value = option.dataset.value;
+
+      if (!state.quizStarted) {
+        state.quizStarted = true;
+        trackEvent('quiz_start', {
+          service_name: 'pre_atendimento',
+          cta_location: 'quiz'
+        });
+      }
+
+      elements.quizForm.querySelectorAll(`.quiz-option[data-step="${step}"]`).forEach((button) => {
+        const isActive = button === option;
+        button.classList.toggle('is-selected', isActive);
+        button.setAttribute('aria-pressed', String(isActive));
+      });
+
+      state.quizAnswers[step] = { question, value };
+
+      trackEvent('quiz_answer', {
+        service_name: 'pre_atendimento',
+        cta_location: 'quiz',
+        quiz_step: Number(step),
+        quiz_question: question,
+        quiz_answer: value
+      });
+
+      updateQuizSubmit();
+    });
+
+    elements.quizSubmit.addEventListener('click', (event) => {
+      if (elements.quizSubmit.getAttribute('aria-disabled') === 'true') {
+        event.preventDefault();
+        return;
+      }
+
+      const service = state.quizAnswers['1']?.value;
+      const situation = state.quizAnswers['2']?.value;
+
+      trackEvent('quiz_submit', {
+        service_name: service || 'pre_atendimento',
+        cta_location: 'quiz',
+        quiz_step: 2,
+        quiz_question: 'situacao',
+        quiz_answer: situation || '',
+        link_url: WHATSAPP_BASE_URL
+      });
+
       trackEvent('click_whatsapp', {
-        service_type: state.context,
-        service_name: link.dataset.serviceName || 'atendimento_geral',
-        cta_location: link.dataset.ctaLocation || 'unknown',
-        link_url: `https://wa.me/${WHATSAPP_NUMBER}`
+        service_name: service || 'pre_atendimento',
+        cta_location: 'quiz',
+        link_url: WHATSAPP_BASE_URL
       });
     });
-  });
-
-  document.querySelectorAll('.js-instagram').forEach((link) => {
-    link.addEventListener('click', () => {
-      trackEvent('click_instagram', {
-        service_type: state.context,
-        service_name: 'instagram',
-        cta_location: link.dataset.ctaLocation || 'unknown',
-        link_url: 'https://www.instagram.com/andre.despachante1/'
-      });
-    });
-  });
-
-  document.querySelectorAll('.js-service').forEach((link) => {
-    const serviceName = link.dataset.serviceName;
-    const serviceType = link.dataset.serviceType;
-    const serviceLabel = SERVICE_LABELS[serviceName] || 'serviço documental';
-    link.href = buildWhatsAppUrl(`Olá, André. Vim pelo site e preciso de atendimento sobre ${serviceLabel}.`);
-
-    link.addEventListener('click', () => {
-      const params = {
-        service_type: serviceType,
-        service_name: serviceName,
-        cta_location: link.dataset.ctaLocation,
-        link_url: `https://wa.me/${WHATSAPP_NUMBER}`
-      };
-      trackEvent('service_click', params);
-      trackEvent('click_whatsapp', params);
-    });
-  });
-
-  elements.quizForm.addEventListener('click', (event) => {
-    const option = event.target.closest('.quiz-option');
-    if (!option) return;
-
-    const step = option.dataset.step;
-    const value = option.dataset.value;
-    const label = option.dataset.label;
-
-    if (!state.quizStarted) {
-      state.quizStarted = true;
-      trackEvent('quiz_start', { service_type: state.context });
-    }
-
-    elements.quizForm.querySelectorAll(`.quiz-option[data-step="${step}"]`).forEach((button) => {
-      button.setAttribute('aria-pressed', String(button === option));
-    });
-
-    state.quizAnswers[step] = { value, label };
-    trackEvent('quiz_answer', {
-      service_type: state.context,
-      quiz_step: Number(step),
-      quiz_question: `question_${step}`,
-      quiz_answer: value
-    });
-
-    updateQuizSubmit();
-  });
+  }
 
   function updateQuizSubmit() {
-    const answer1 = state.quizAnswers['1'];
-    const answer2 = state.quizAnswers['2'];
-    const status = elements.quizForm.querySelector('[data-quiz="status"]');
+    const service = state.quizAnswers['1'];
+    const situation = state.quizAnswers['2'];
 
-    if (!answer1 || !answer2) {
-      status.textContent = answer1 ? 'Agora selecione uma opção na segunda etapa.' : 'Selecione uma opção em cada etapa.';
+    if (!service || !situation) {
+      elements.quizStatus.textContent = service
+        ? 'Agora selecione uma opção na segunda etapa.'
+        : 'Selecione uma opção em cada etapa.';
+      elements.quizSubmit.classList.add('is-disabled');
+      elements.quizSubmit.setAttribute('aria-disabled', 'true');
+      elements.quizSubmit.href = buildWhatsAppUrl(DEFAULT_WHATSAPP_MESSAGE);
       return;
     }
 
-    const message = CONTEXTS[state.context].quiz.buildMessage(answer1.label.toLowerCase(), answer2.label.toLowerCase());
+    const message = `Olá, Lorena. Vim pelo site e gostaria de orientação sobre ${service.value}. Minha situação: ${situation.value}.`;
+    elements.quizStatus.textContent = 'Pronto. Continue o atendimento no WhatsApp.';
     elements.quizSubmit.href = buildWhatsAppUrl(message);
     elements.quizSubmit.classList.remove('is-disabled');
     elements.quizSubmit.setAttribute('aria-disabled', 'false');
-    status.textContent = 'Pronto. Continue o atendimento no WhatsApp.';
   }
 
-  elements.quizSubmit.addEventListener('click', (event) => {
-    if (elements.quizSubmit.getAttribute('aria-disabled') === 'true') {
-      event.preventDefault();
-      return;
-    }
+  function initializeFaqTracking() {
+    document.querySelectorAll('.faq-item').forEach((item) => {
+      item.addEventListener('toggle', () => {
+        if (!item.open) return;
 
-    const answer1 = state.quizAnswers['1'];
-    const answer2 = state.quizAnswers['2'];
-    trackEvent('quiz_submit', {
-      service_type: state.context,
-      service_name: answer1.value,
-      cta_location: 'quiz',
-      quiz_answer: answer2.value,
-      link_url: `https://wa.me/${WHATSAPP_NUMBER}`
-    });
-    trackEvent('click_whatsapp', {
-      service_type: state.context,
-      service_name: answer1.value,
-      cta_location: 'quiz',
-      link_url: `https://wa.me/${WHATSAPP_NUMBER}`
-    });
-  });
-
-  document.querySelectorAll('.faq-item').forEach((item, index) => {
-    item.addEventListener('toggle', () => {
-      if (!item.open) return;
-      trackEvent('faq_open', {
-        service_type: state.context,
-        service_name: `faq_${index + 1}`
+        trackEvent('faq_open', {
+          question_id: item.dataset.questionId,
+          cta_location: 'faq'
+        });
       });
     });
-  });
+  }
 
-  document.querySelector('.js-routes')?.addEventListener('click', (event) => {
-    trackEvent('click_routes', {
-      service_type: state.context,
-      cta_location: 'location',
-      link_url: event.currentTarget.href
+  function openChatbot({ track = true } = {}) {
+    if (!elements.chatbotPanel || state.chatbotOpen) return;
+
+    state.chatbotOpen = true;
+    elements.chatbotPanel.hidden = false;
+    elements.chatbotToggle?.setAttribute('aria-expanded', 'true');
+
+    if (track) {
+      trackEvent('chatbot_open', {
+        cta_location: 'floating_chatbot'
+      });
+    }
+  }
+
+  function closeChatbot({ track = true } = {}) {
+    if (!elements.chatbotPanel || !state.chatbotOpen) return;
+
+    state.chatbotOpen = false;
+    elements.chatbotPanel.hidden = true;
+    elements.chatbotToggle?.setAttribute('aria-expanded', 'false');
+
+    if (track) {
+      trackEvent('chatbot_close', {
+        cta_location: 'floating_chatbot'
+      });
+    }
+  }
+
+  function initializeChatbot() {
+    if (!elements.chatbotPanel || !elements.chatbotWhatsApp) return;
+
+    elements.chatbotWhatsApp.href = buildWhatsAppUrl(CHATBOT_WHATSAPP_MESSAGE);
+
+    elements.chatbotToggle?.addEventListener('click', () => {
+      if (state.chatbotOpen) closeChatbot();
+      else openChatbot();
     });
-  });
 
-  document.querySelector('.js-review')?.addEventListener('click', (event) => {
-    trackEvent('review_click', {
-      service_type: state.context,
-      cta_location: 'reviews',
-      link_url: event.currentTarget.href
+    elements.chatbotClose?.addEventListener('click', () => closeChatbot());
+
+    elements.chatbotQuestions.forEach((button) => {
+      button.addEventListener('click', () => {
+        const questionId = button.dataset.questionId;
+        const response = CHATBOT_RESPONSES[questionId];
+        if (!response) return;
+
+        state.activeChatbotQuestion = questionId;
+        elements.chatbotQuestions.forEach((item) => item.classList.toggle('is-active', item === button));
+        elements.chatbotAnswer.textContent = response.answer;
+        elements.chatbotWhatsApp.href = buildWhatsAppUrl(CHATBOT_WHATSAPP_MESSAGE);
+
+        trackEvent('chatbot_question_click', {
+          question_id: questionId,
+          cta_location: 'chatbot'
+        });
+      });
     });
-  });
 
-  document.querySelector('.js-call')?.addEventListener('click', () => {
-    trackEvent('click_call', {
-      service_type: state.context,
-      cta_location: 'footer',
-      link_url: 'tel:+5521983006641'
+    elements.chatbotWhatsApp.addEventListener('click', () => {
+      trackEvent('chatbot_whatsapp_click', {
+        question_id: state.activeChatbotQuestion || 'generic',
+        cta_location: 'chatbot',
+        link_url: WHATSAPP_BASE_URL
+      });
+
+      trackEvent('click_whatsapp', {
+        service_name: 'chatbot',
+        cta_location: 'chatbot',
+        question_id: state.activeChatbotQuestion || 'generic',
+        link_url: WHATSAPP_BASE_URL
+      });
     });
-  });
 
-  document.querySelectorAll('.footer a[href="#"]').forEach((link) => {
-    link.addEventListener('click', (event) => event.preventDefault());
-  });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeChatbot();
+    });
+  }
 
   function initializeCarousels() {
     document.querySelectorAll('[data-carousel]').forEach((shell) => {
@@ -437,20 +329,21 @@
       const nextButton = shell.querySelector('[data-carousel-next]');
       const dotsContainer = shell.querySelector('.carousel-dots');
       let activeIndex = 0;
-      let scrollFrame;
+      let scrollFrame = 0;
 
       const dots = items.map((item, index) => {
         const dot = document.createElement('button');
         dot.type = 'button';
         dot.setAttribute('aria-label', `Ir para o item ${index + 1}`);
         dot.addEventListener('click', () => scrollToItem(index));
-        dotsContainer.append(dot);
+        dotsContainer?.append(dot);
         return dot;
       });
 
       function scrollToItem(index) {
         const item = items[index];
         if (!item || track.clientWidth === 0) return;
+
         const trackRect = track.getBoundingClientRect();
         const itemRect = item.getBoundingClientRect();
         const left = track.scrollLeft + itemRect.left - trackRect.left - (track.clientWidth - itemRect.width) / 2;
@@ -459,18 +352,21 @@
 
       function update() {
         if (track.clientWidth === 0) return;
+
         const hasOverflow = track.scrollWidth > track.clientWidth + 4;
         shell.classList.toggle('is-static', !hasOverflow);
+
         if (!hasOverflow) {
           activeIndex = 0;
           dots.forEach((dot, index) => dot.classList.toggle('is-active', index === 0));
-          previousButton.disabled = true;
-          nextButton.disabled = true;
+          if (previousButton) previousButton.disabled = true;
+          if (nextButton) nextButton.disabled = true;
           return;
         }
+
         const trackRect = track.getBoundingClientRect();
         const center = trackRect.left + trackRect.width / 2;
-        let closestDistance = Infinity;
+        let closestDistance = Number.POSITIVE_INFINITY;
 
         items.forEach((item, index) => {
           const rect = item.getBoundingClientRect();
@@ -482,25 +378,25 @@
         });
 
         dots.forEach((dot, index) => dot.classList.toggle('is-active', index === activeIndex));
-        previousButton.disabled = activeIndex === 0;
-        nextButton.disabled = activeIndex === items.length - 1;
+        if (previousButton) previousButton.disabled = activeIndex === 0;
+        if (nextButton) nextButton.disabled = activeIndex === items.length - 1;
       }
 
       track.addEventListener('scroll', () => {
         window.cancelAnimationFrame(scrollFrame);
         scrollFrame = window.requestAnimationFrame(update);
       }, { passive: true });
-      previousButton.addEventListener('click', () => scrollToItem(Math.max(0, activeIndex - 1)));
-      nextButton.addEventListener('click', () => scrollToItem(Math.min(items.length - 1, activeIndex + 1)));
 
-      const controller = {
+      previousButton?.addEventListener('click', () => scrollToItem(Math.max(0, activeIndex - 1)));
+      nextButton?.addEventListener('click', () => scrollToItem(Math.min(items.length - 1, activeIndex + 1)));
+
+      carouselControllers.push({
         refresh() {
-          if (track.closest('[hidden]')) return;
           track.scrollLeft = 0;
           window.requestAnimationFrame(update);
         }
-      };
-      carouselControllers.push(controller);
+      });
+
       update();
     });
   }
@@ -510,47 +406,63 @@
   }
 
   function initializeCounters() {
-    const group = document.querySelector('[data-counter-group]');
-    if (!group) return;
-    const counters = [...group.querySelectorAll('[data-counter]')];
+    const counters = [...document.querySelectorAll('[data-counter]')];
+    if (!counters.length) return;
 
-    const formatValue = (value, decimals) => value.toFixed(decimals).replace('.', ',');
-    const showFinalValues = () => counters.forEach((counter) => {
-      counter.textContent = formatValue(Number(counter.dataset.value), Number(counter.dataset.decimals || 0));
+    const renderFinalValues = () => counters.forEach((counter) => {
+      counter.textContent = formatCounterValue(
+        Number(counter.dataset.value),
+        Number(counter.dataset.decimals || 0),
+        counter.dataset.suffix || ''
+      );
     });
 
     if (reduceMotion || !('IntersectionObserver' in window)) {
-      showFinalValues();
+      renderFinalValues();
       return;
     }
 
-    counters.forEach((counter) => { counter.textContent = formatValue(0, Number(counter.dataset.decimals || 0)); });
+    counters.forEach((counter) => {
+      counter.textContent = formatCounterValue(0, Number(counter.dataset.decimals || 0), counter.dataset.suffix || '');
+    });
+
     const observer = new IntersectionObserver((entries) => {
       if (!entries.some((entry) => entry.isIntersecting)) return;
       observer.disconnect();
+
       const start = performance.now();
-      const duration = 900;
+      const duration = 950;
 
       const animate = (now) => {
         const progress = Math.min(1, (now - start) / duration);
         const eased = 1 - Math.pow(1 - progress, 3);
+
         counters.forEach((counter) => {
           const target = Number(counter.dataset.value);
           const decimals = Number(counter.dataset.decimals || 0);
-          counter.textContent = formatValue(target * eased, decimals);
+          const suffix = counter.dataset.suffix || '';
+          counter.textContent = formatCounterValue(target * eased, decimals, suffix);
         });
-        if (progress < 1) window.requestAnimationFrame(animate);
-        else showFinalValues();
+
+        if (progress < 1) {
+          window.requestAnimationFrame(animate);
+        } else {
+          renderFinalValues();
+        }
       };
+
       window.requestAnimationFrame(animate);
     }, { threshold: 0.35 });
 
+    const group = document.querySelector('[data-counter-group]') || counters[0];
     observer.observe(group);
   }
 
   function initializeReveals() {
     const revealElements = document.querySelectorAll('.reveal');
-    if (!('IntersectionObserver' in window)) {
+    if (!revealElements.length) return;
+
+    if (reduceMotion || !('IntersectionObserver' in window)) {
       revealElements.forEach((element) => element.classList.add('is-visible'));
       return;
     }
@@ -567,48 +479,61 @@
   }
 
   function initializePreloader() {
-    const preloader = document.querySelector('.preloader');
+    if (!elements.preloader) return;
+
     const delay = reduceMotion ? 0 : 1050;
 
     window.setTimeout(() => {
-      preloader.classList.add('is-hidden');
+      elements.preloader.classList.add('is-hidden');
       document.documentElement.classList.add('is-ready');
-      window.setTimeout(() => preloader.remove(), reduceMotion ? 0 : 450);
+      window.setTimeout(() => elements.preloader.remove(), reduceMotion ? 0 : 420);
     }, delay);
   }
 
-  function updateFloatingButton() {
-    if (!elements.floatingActions) return;
-
-    const blockingSections = document.querySelectorAll('#servicos, #especialista, #avaliacoes, #pre-atendimento, #localizacao, #faq, .final-cta, .footer');
-    const hasBlockingSectionInView = [...blockingSections].some((section) => {
-      const rect = section.getBoundingClientRect();
-      return rect.top < window.innerHeight && rect.bottom > window.innerHeight * 0.45;
-    });
-
-    elements.floatingActions.classList.toggle('is-visible', window.scrollY > 500 && !hasBlockingSectionInView);
+  function updateStickyHeader() {
+    elements.siteHeader?.classList.toggle('is-scrolled', window.scrollY > 20);
   }
 
-  function updateStickyHeader() {
-    elements.siteHeader.classList.toggle('is-scrolled', window.scrollY > 24);
+  function updateFloatingActions() {
+    if (!elements.floatingActions) return;
+
+    const shouldShow = window.scrollY > 500;
+    elements.floatingActions.classList.toggle('is-visible', shouldShow);
+
+    if (!shouldShow) closeChatbot({ track: false });
+  }
+
+  function bindPlaceholderLinks() {
+    document.querySelectorAll('a[href="#"]').forEach((link) => {
+      link.addEventListener('click', (event) => event.preventDefault());
+    });
+  }
+
+  function initializePage() {
+    syncWhatsAppLinks();
+    bindTrackedLinks();
+    initializeQuiz();
+    initializeFaqTracking();
+    initializeChatbot();
+    initializeCarousels();
+    initializeCounters();
+    initializeReveals();
+    initializePreloader();
+    bindPlaceholderLinks();
+    updateStickyHeader();
+    updateFloatingActions();
+
+    const year = document.querySelector('#current-year');
+    if (year) year.textContent = String(new Date().getFullYear());
   }
 
   window.addEventListener('scroll', () => {
     updateStickyHeader();
-    updateFloatingButton();
+    updateFloatingActions();
   }, { passive: true });
-  window.addEventListener('resize', () => {
-    refreshCarousels();
-    updateFloatingButton();
-  });
+
+  window.addEventListener('resize', refreshCarousels);
   window.addEventListener('load', refreshCarousels, { once: true });
 
-  initializeCarousels();
-  setContext(getInitialContext(), { track: false, updateUrl: false });
-  initializePreloader();
-  initializeReveals();
-  initializeCounters();
-  updateStickyHeader();
-  updateFloatingButton();
-  document.querySelector('#current-year').textContent = String(new Date().getFullYear());
+  initializePage();
 })();

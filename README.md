@@ -1,6 +1,6 @@
-# Landing page — André Fernandes Documentalista
+# Landing page — Lorena Silva
 
-Landing page estática, mobile-first e sem processo de build. O projeto usa somente HTML, CSS e JavaScript nativos e pode ser publicado diretamente no GitHub Pages.
+Landing page estática, mobile-first e sem build para GitHub Pages. O projeto usa apenas HTML, CSS e JavaScript nativos, com foco em captação via WhatsApp, SEO básico, tracking em `dataLayer` e performance em telas pequenas.
 
 ## Estrutura
 
@@ -9,130 +9,146 @@ index.html
 css/style.css
 js/main.js
 assets/
-  logo-andre-fernandes.webp
-  andre-fernandes.webp
-  google-icon.webp
+  logo-lorena-silva.webp
+  lorena-hero.webp
+  lorena-specialist.webp
+  combate-urbano-logo.webp
 robots.txt
 sitemap.xml
 ```
 
 ## Executar localmente
 
-O `index.html` funciona diretamente no navegador. Para reproduzir o comportamento do GitHub Pages, é preferível iniciar um servidor estático na raiz do projeto:
+O `index.html` funciona diretamente no navegador, mas o ideal é usar um servidor estático simples na raiz do projeto.
+
+Exemplos:
 
 ```powershell
 python -m http.server 8000
 ```
 
+ou
+
+```powershell
+npx serve .
+```
+
 Depois acesse:
 
 - `http://localhost:8000/`
-- `http://localhost:8000/?servico=visto`
-- `http://localhost:8000/?servico=veicular`
 
-## Publicar no GitHub Pages
+## Assets atuais
 
-1. Envie os arquivos para a branch principal do repositório.
-2. No GitHub, abra **Settings > Pages**.
-3. Em **Build and deployment**, selecione **Deploy from a branch**.
-4. Selecione a branch principal e a pasta `/ (root)`.
-5. Salve e aguarde a URL de publicação.
-6. Atualize canonical, Open Graph, schema, `robots.txt` e `sitemap.xml` com essa URL.
+- `assets/logo-lorena-silva.webp`: logo redonda principal usada em navbar, preloader, watermarks e favicon.
+- `assets/lorena-hero.webp`: imagem recortada com fundo transparente usada no hero.
+- `assets/lorena-specialist.webp`: retrato usado na seção especialista e Open Graph.
+- `assets/combate-urbano-logo.webp`: logo institucional da seção Clube de Tiro Combate Urbano.
 
-Todos os caminhos internos são relativos e funcionam em repositórios publicados como subdiretório no GitHub Pages.
+Se algum nome ou extensão mudar, atualize as referências em `index.html`.
 
-## Substituir os assets
+## Onde alterar contatos e links
 
-- `assets/logo-andre-fernandes.webp`: logo circular principal, usada na navegação, preloader e watermarks.
-- `assets/andre-fernandes.webp`: foto recortada usada no hero e na seção do especialista.
-- `assets/google-icon.webp`: ícone usado na prova social e nos cards de avaliação.
+### WhatsApp
 
-Se o nome ou a extensão dos arquivos mudar, atualize as referências em `index.html` e `css/style.css`. Mantenha `width` e `height` nas tags de imagem para evitar mudanças de layout.
+O número principal está centralizado em `js/main.js`:
 
-## Configurar Google Tag Manager
+```js
+const WHATSAPP_NUMBER = '5534992524138';
+```
 
-Em `index.html`, procure por `GTM-XXXXXXX`. Há dois blocos comentados:
+Mensagens padrão também ficam em `js/main.js`:
 
-1. script do GTM no `<head>`;
-2. iframe `noscript` no fim do `<body>`.
+- `DEFAULT_WHATSAPP_MESSAGE`
+- `CHATBOT_WHATSAPP_MESSAGE`
 
-Substitua o ID e descomente os dois blocos. O site inicializa `window.dataLayer` uma única vez em `js/main.js` e expõe estas funções:
+Mensagens específicas de botões podem ser alteradas direto no HTML com `data-whatsapp-message`.
+
+### Instagram da Lorena
+
+Atualize em:
+
+- `index.html`: links com classe `.js-instagram`
+- `js/main.js`: constante `INSTAGRAM_URL`
+
+### Instagram do Clube
+
+Atualize em:
+
+- `index.html`: links com classe `.js-club-instagram`
+- `js/main.js`: constante `CLUB_INSTAGRAM_URL`
+
+## SEO e URLs finais
+
+As URLs finais atuais usam a rota esperada do GitHub Pages:
+
+- `https://pedroh99p-bot.github.io/lorenasilvadespachante/`
+
+Se isso mudar, atualize:
+
+- `index.html`: canonical, Open Graph, Twitter e JSON-LD
+- `robots.txt`
+- `sitemap.xml`
+
+O favicon atual usa a própria logo redonda. Se você trocar o favicon ou a imagem de Open Graph, ajuste o `<head>` em `index.html`.
+
+## Schema
+
+O projeto usa:
+
+- `ProfessionalService` sem endereço inventado
+- `FAQPage` baseado nas perguntas visíveis na landing
+
+Não há `aggregateRating` no schema.
+
+## Tracking / dataLayer
+
+O site inicializa `window.dataLayer` em `js/main.js` e expõe:
 
 ```js
 trackEvent(eventName, eventParams)
 buildWhatsAppUrl(message)
 ```
 
-Eventos implementados:
+Eventos atuais:
 
 - `click_whatsapp`
-- `click_call`
-- `click_routes`
 - `click_instagram`
-- `switch_visto`
-- `switch_veicular`
+- `click_club_instagram`
 - `service_click`
+- `faq_open`
 - `quiz_start`
 - `quiz_answer`
 - `quiz_submit`
-- `review_click`
-- `faq_open`
+- `chatbot_open`
+- `chatbot_close`
+- `chatbot_question_click`
+- `chatbot_whatsapp_click`
 
 ### Testar eventos no console
 
-1. Abra a página e as ferramentas de desenvolvedor.
-2. No Console, execute `window.dataLayer` para ver todos os eventos.
-3. Antes de uma interação, execute `window.dataLayer.length`.
-4. Clique no elemento que deseja testar.
-5. Execute `window.dataLayer.at(-1)` para inspecionar o último evento.
+1. Abra a página com DevTools.
+2. Rode `window.dataLayer`.
+3. Execute uma interação.
+4. Rode `window.dataLayer.at(-1)` para inspecionar o último evento.
 
-Depois de ativar o GTM, use também o modo Preview do Tag Assistant para validar variáveis e acionadores.
+## Publicar no GitHub Pages
 
-## Itens que exigem substituição
+1. Envie os arquivos para a branch `main`.
+2. No GitHub, abra `Settings > Pages`.
+3. Em `Build and deployment`, selecione `Deploy from a branch`.
+4. Escolha `main` e a pasta `/ (root)`.
+5. Salve e aguarde a publicação.
 
-### URL final e canonical
+URL esperada:
 
-Procure por `https://SEU-DOMINIO.com/` em:
-
-- `index.html`;
-- `robots.txt`;
-- `sitemap.xml`.
-
-Atualize também `og:url`, `og:image`, `twitter:image`, `@id`, `url` e `image` do JSON-LD.
-
-### Google Maps
-
-O mapa é carregado por iframe apenas ao se aproximar da seção de localização. Em `index.html`, procure pelo comentário `TODO: substituir pelo link curto oficial do Google Maps` para atualizar o botão de rotas com o Google Business Profile confirmado.
-
-### Avaliações
-
-Procure pelo comentário `PLACEHOLDERS` em `index.html`. Substitua os três textos provisórios apenas por avaliações reais, verificadas e autorizadas. Confirme também a nota e a quantidade atual de avaliações.
-
-`aggregateRating` foi intencionalmente omitido do schema. Não o adicione sem validar a origem e a conformidade dos dados com as diretrizes do Google.
-
-### Política de Privacidade e Termos
-
-Os links do rodapé ainda são placeholders. Crie os documentos finais antes de ativar tags publicitárias e publicar campanhas.
-
-## Contextos de campanha
-
-A URL define o contexto inicial e tem prioridade sobre `sessionStorage`:
-
-- `?servico=visto`
-- `?servico=veicular`
-
-Sem parâmetro, a última escolha da sessão é usada; se não houver escolha, o modo inicial é `visto`.
+- `https://pedroh99p-bot.github.io/lorenasilvadespachante/`
 
 ## Checklist antes de publicar
 
-- Revisar o recorte e o posicionamento da logo e da foto em aparelhos reais.
-- Confirmar nome empresarial, endereço, telefone e Instagram.
-- Confirmar nota e quantidade de avaliações.
-- Inserir link direto das avaliações e link oficial de rotas.
-- Trocar todas as URLs placeholder.
-- Criar Política de Privacidade e Termos de Uso.
-- Inserir GTM e configurar consentimento conforme a estratégia jurídica/LGPD.
-- Validar os eventos no Tag Assistant.
-- Revisar a elegibilidade das campanhas na política de documentos e serviços governamentais do Google Ads.
-- Testar em aparelhos reais, principalmente em 4G e telas pequenas.
-- Executar Lighthouse e validar dados estruturados antes da indexação.
+- Validar a composição do hero em iPhone pequeno e Android narrow.
+- Conferir se a logo do clube está com destaque institucional, não promocional.
+- Revisar o Open Graph em compartilhamento real.
+- Confirmar os dados de autoridade exibidos na página.
+- Revisar contraste em brilho alto no mobile.
+- Ativar GTM apenas quando o ID final estiver definido.
+- Criar as páginas finais de Política de Privacidade e Termos de Uso antes de campanhas pagas.

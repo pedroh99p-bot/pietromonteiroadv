@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <!-- TODO: substituir pelo domínio final antes da publicação. -->
   <url>
-    <loc>https://SEU-DOMINIO.com/</loc>
+    <loc>https://pedroh99p-bot.github.io/lorenasilvadespachante/</loc>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
