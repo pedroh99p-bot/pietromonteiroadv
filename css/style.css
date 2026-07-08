@@ -352,16 +352,27 @@ main {
   transition: opacity 0.35s ease, visibility 0.35s ease;
 }
 
+.preloader__visual {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 138px;
+  aspect-ratio: 1;
+  place-items: center;
+}
+
 .preloader__halo {
   position: absolute;
-  width: min(72vw, 420px);
+  inset: 50%;
+  width: clamp(220px, 52vw, 360px);
   aspect-ratio: 1;
   border-radius: 50%;
   background: radial-gradient(circle, rgba(255, 255, 255, 0.14), transparent 64%);
   filter: blur(18px);
+  transform: translate(-50%, -50%);
 }
 
-.preloader img {
+.preloader__logo {
   position: relative;
   z-index: 1;
   width: 92px;
@@ -372,8 +383,7 @@ main {
 
 .preloader__ring {
   position: absolute;
-  width: 138px;
-  aspect-ratio: 1;
+  inset: 0;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-top-color: rgba(255, 255, 255, 0.58);
   border-radius: 50%;
@@ -1131,6 +1141,19 @@ main {
 .club-stats span {
   color: var(--muted);
   font-size: 0.84rem;
+}
+
+.club-stats__google strong {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.club-stats__google img {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  object-fit: contain;
 }
 
 .club-card {
