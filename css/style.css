@@ -575,10 +575,11 @@ main {
 
 .hero-card {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 58fr) minmax(0, 42fr);
-  align-items: stretch;
+  display: flex;
+  align-items: center;
   overflow: hidden;
+  isolation: isolate;
+  min-height: clamp(540px, 78vh, 700px);
   border-radius: var(--radius-lg);
   border-color: rgba(202, 168, 90, 0.18);
   background:
@@ -595,10 +596,10 @@ main {
 }
 
 .hero-card::before {
-  width: 360px;
+  width: 420px;
   aspect-ratio: 1;
-  right: -90px;
-  top: -120px;
+  right: -110px;
+  top: -150px;
   background: radial-gradient(circle, rgba(26, 115, 255, 0.18), transparent 70%);
   filter: blur(20px);
 }
@@ -614,7 +615,8 @@ main {
   position: relative;
   z-index: 2;
   min-width: 0;
-  padding: 1.2rem 0.8rem 1.2rem 1rem;
+  width: min(100%, 760px);
+  padding: clamp(1.5rem, 4vw, 3rem);
 }
 
 .eyebrow {
@@ -651,14 +653,14 @@ main {
 }
 
 .hero h1 {
-  max-width: 9ch;
+  max-width: 11ch;
   margin-bottom: 0.95rem;
-  font-size: clamp(2rem, 7.3vw, 4.4rem);
+  font-size: clamp(2.35rem, 7.2vw, 5rem);
 }
 
 .hero-lead {
-  max-width: 28ch;
-  font-size: 0.92rem;
+  max-width: 34ch;
+  font-size: clamp(0.98rem, 1.8vw, 1.08rem);
 }
 
 .hero-badges {
@@ -686,130 +688,16 @@ main {
   margin-top: 1rem;
 }
 
-.hero-media {
-  position: relative;
-  min-height: 100%;
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
-  background:
-    radial-gradient(circle at center, rgba(11, 42, 85, 0.28), transparent 54%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 50%);
-  pointer-events: none;
-}
-
-.hero-media__gradient {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background:
-    linear-gradient(180deg, rgba(2, 8, 23, 0.12), rgba(2, 8, 23, 0.08)),
-    radial-gradient(circle at center, transparent 28%, rgba(2, 8, 23, 0.14) 78%);
-}
-
 .hero-watermark {
   position: absolute;
-  right: -8%;
-  bottom: 3%;
-  z-index: 0;
-  width: min(74vw, 210px);
-  opacity: 0.1;
-  filter: saturate(1) brightness(1.15);
-}
-
-.hero-orbit {
-  position: absolute;
-  right: -8%;
-  bottom: 12%;
-  width: 188px;
-  aspect-ratio: 1;
-  z-index: 0;
-  border: 1px solid rgba(216, 226, 242, 0.08);
-  border-radius: 50%;
-}
-
-.hero-orbit::before,
-.hero-orbit::after {
-  content: "";
-  position: absolute;
-  inset: 14%;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: inherit;
-}
-
-.hero-orbit::after {
-  inset: 28%;
-}
-
-.hero-orbit span {
-  position: absolute;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: rgba(216, 216, 216, 0.7);
-}
-
-.hero-orbit span:nth-child(1) {
-  top: 18%;
-  left: 18%;
-}
-
-.hero-orbit span:nth-child(2) {
-  top: 36%;
-  right: 7%;
-}
-
-.hero-orbit span:nth-child(3) {
-  bottom: 18%;
-  left: 7%;
-}
-
-.hero-person-frame {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  top: 0;
-  z-index: 2;
-  overflow: hidden;
-}
-
-.hero-person {
-  position: absolute;
-  right: -8%;
-  bottom: 2rem;
-  width: 220px;
-  max-height: 80%;
-  object-fit: contain;
-  object-position: bottom right;
-  filter: drop-shadow(-18px 24px 38px rgba(0, 0, 0, 0.34));
-}
-
-.hero-trust-card {
-  position: absolute;
-  right: 0.5rem;
-  bottom: 0.5rem;
-  z-index: 2;
-  max-width: 140px;
-  padding: 0.68rem 0.72rem;
-  border: 1px solid rgba(216, 226, 242, 0.1);
-  border-radius: 1rem;
-  background: rgba(5, 16, 37, 0.74);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-
-.hero-trust-card strong {
-  display: block;
-  margin-bottom: 0.32rem;
-  font-size: 0.64rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.hero-trust-card span {
-  display: block;
-  color: var(--muted);
-  font-size: 0.66rem;
-  line-height: 1.4;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: min(86vw, 380px);
+  opacity: 0.12;
+  transform: translate(-50%, -50%);
+  filter: saturate(1.02) brightness(1.18);
+  pointer-events: none;
 }
 
 .ticker {
@@ -1393,7 +1281,9 @@ main {
 .national-map-card {
   position: relative;
   min-height: 420px;
-  padding: 1.2rem;
+  display: grid;
+  gap: 0.9rem;
+  padding: 1rem;
   overflow: hidden;
   border-radius: var(--radius-lg);
   background:
@@ -1402,79 +1292,26 @@ main {
     linear-gradient(160deg, var(--card), var(--card-soft));
 }
 
-.national-map {
+.national-map-embed {
   width: 100%;
-  max-width: 360px;
-  margin: 2.2rem auto 0;
-}
-
-.national-map path {
-  fill: rgba(7, 28, 58, 0.9);
-  stroke: rgba(216, 226, 242, 0.22);
-  stroke-width: 8;
-  stroke-linejoin: round;
-}
-
-.national-map__detail {
-  fill: rgba(26, 115, 255, 0.22);
-  stroke: rgba(227, 193, 111, 0.72);
-}
-
-.national-marker {
-  position: absolute;
-  right: 23%;
-  bottom: 28%;
-  z-index: 2;
-  display: grid;
-  place-items: center;
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(227, 193, 111, 0.88), rgba(199, 164, 93, 0.24));
-  box-shadow: 0 0 0 10px rgba(199, 164, 93, 0.08);
-}
-
-.national-marker span {
-  color: #08162c;
-  font-size: 0.76rem;
-  font-weight: 900;
-  letter-spacing: 0.1em;
-}
-
-.national-flag {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 70px;
-  height: 48px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 0.9rem;
-  background: #0c4f2d;
-  overflow: hidden;
+  min-height: 380px;
+  border: 0;
+  border-radius: calc(var(--radius-lg) - 0.35rem);
   box-shadow: var(--shadow-soft);
+  background: #0b1220;
 }
 
-.national-flag__green,
-.national-flag__yellow,
-.national-flag__blue {
-  position: absolute;
-  inset: 0;
-}
-
-.national-flag__green {
-  background: #0c6c3f;
-}
-
-.national-flag__yellow {
-  inset: 9px 13px;
-  background: #f3c93c;
-  transform: rotate(45deg);
-}
-
-.national-flag__blue {
-  inset: 13px 22px;
-  border-radius: 50%;
-  background: #194694;
+.national-map-caption {
+  justify-self: start;
+  padding: 0.55rem 0.85rem;
+  color: var(--muted-strong);
+  border: 1px solid rgba(216, 226, 242, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 .faq-item {
@@ -1746,26 +1583,19 @@ main {
   }
 
   .hero-card {
-    grid-template-columns: minmax(0, 57fr) minmax(0, 43fr);
+    min-height: clamp(560px, 72vh, 720px);
   }
 
   .hero-content {
-    padding: 1.5rem 1.1rem 1.55rem 1.5rem;
+    padding: 2rem;
   }
 
   .hero-actions {
     grid-template-columns: 1fr 1fr;
   }
 
-  .hero-person {
-    right: -3%;
-    width: min(116%, 320px);
-    bottom: 1.8rem;
-    max-height: 82%;
-  }
-
-  .hero-trust-card {
-    max-width: 170px;
+  .hero-watermark {
+    width: min(62vw, 420px);
   }
 
   .footer-grid {
@@ -1792,43 +1622,15 @@ main {
   }
 
   .hero-card {
-    grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
-    min-height: 690px;
+    min-height: 660px;
   }
 
   .hero-content {
-    padding: 2.6rem 0 2.6rem 2.75rem;
-  }
-
-  .hero-media {
-    min-height: 690px;
+    padding: 3rem;
   }
 
   .hero-watermark {
-    right: -2%;
-    top: auto;
-    bottom: 10%;
-    width: min(45vw, 430px);
-  }
-
-  .hero-orbit {
-    right: -8%;
-    bottom: 6%;
-    width: 360px;
-  }
-
-  .hero-person {
-    right: 0;
-    top: auto;
-    width: min(106%, 520px);
-    max-height: 90%;
-    bottom: 0;
-  }
-
-  .hero-trust-card {
-    right: 1.2rem;
-    bottom: 1.2rem;
-    max-width: 240px;
+    width: min(42vw, 500px);
   }
 
   .card-grid--4 {
@@ -1959,25 +1761,12 @@ main {
   }
 
   .hero-card {
-    grid-template-columns: minmax(0, 58fr) minmax(0, 42fr);
-  }
-
-  .hero-person {
-    right: -6%;
-    bottom: 1.35rem;
-    width: 182px;
-    max-height: 76%;
+    min-height: 500px;
   }
 
   .hero-watermark {
-    right: -14%;
-    bottom: 2%;
-    top: auto;
-    width: 154px;
-  }
-
-  .hero-trust-card {
-    display: none;
+    width: min(78vw, 260px);
+    top: 54%;
   }
 
   .carousel-track > article {
