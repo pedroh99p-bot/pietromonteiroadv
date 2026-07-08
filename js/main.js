@@ -1,29 +1,30 @@
 (() => {
   'use strict';
 
-  const WHATSAPP_NUMBER = '5534992524138';
+  const WHATSAPP_NUMBER = '5521965960143';
   const PAGE_TYPE = 'landing';
   const WHATSAPP_BASE_URL = `https://wa.me/${WHATSAPP_NUMBER}`;
-  const DEFAULT_WHATSAPP_MESSAGE = 'Olá, Lorena. Vim pelo site e gostaria de orientação sobre processos documentais.';
-  const CHATBOT_WHATSAPP_MESSAGE = 'Olá, Lorena. Vim pelo site, usei o mini assistente e gostaria de continuar o atendimento pelo WhatsApp.';
-  const CLUB_INSTAGRAM_URL = 'https://www.instagram.com/ctcombateurbano/';
-  const INSTAGRAM_URL = 'https://www.instagram.com/despachantedearmass/';
+  const DEFAULT_WHATSAPP_MESSAGE = 'Olá, vim pelo site da Amaro e preciso de informações sobre exame toxicológico.';
+  const CHATBOT_WHATSAPP_MESSAGE = 'Olá, vim pelo site da Amaro, usei o mini assistente e gostaria de continuar o atendimento pelo WhatsApp.';
+  const INSTAGRAM_URL = 'https://www.instagram.com/amaro_exames_toxicologico/';
+  const GOOGLE_URL = 'https://www.google.com/search?q=Amaro+Exame+Toxicol%C3%B3gico+DETRAN';
+  const ROUTES_URL = 'https://www.google.com/maps/search/?api=1&query=Estr.%20Rio%20S%C3%A3o%20Paulo%2C%203783%20-%20Loja%20A%20-%20Campo%20Grande%2C%20Rio%20de%20Janeiro%20-%20RJ%2C%2023075-247';
 
   const CHATBOT_RESPONSES = {
-    vende_armas: {
-      answer: 'Não. O atendimento é voltado para orientação e assessoria documental dentro das normas.'
+    prazo_laudo: {
+      answer: 'O prazo informado é de 3 a 5 dias úteis, conforme o atendimento.'
     },
-    regularizacao: {
-      answer: 'Sim. O atendimento pode orientar sobre processos documentais e próximos passos conforme o caso.'
+    atende_detran: {
+      answer: 'Sim. A Amaro atende demandas de exame toxicológico relacionadas ao DETRAN e documentação.'
     },
-    deferimento: {
-      answer: 'Não. A análise e aprovação dependem exclusivamente dos órgãos competentes.'
+    funciona_24h: {
+      answer: 'O perfil da empresa informa atendimento aberto 24 horas. Chame no WhatsApp para confirmar o melhor horário.'
+    },
+    onde_fica: {
+      answer: 'A unidade fica na Estr. Rio São Paulo, 3783 - Loja A - Campo Grande, Rio de Janeiro.'
     },
     como_comeco: {
-      answer: 'Você pode chamar no WhatsApp e explicar qual processo precisa consultar.'
-    },
-    online: {
-      answer: 'O primeiro contato pode ser feito pelo WhatsApp para entender a necessidade inicial.'
+      answer: 'Você pode chamar no WhatsApp e informar qual exame ou atendimento precisa.'
     }
   };
 
@@ -86,7 +87,7 @@
     if (link.dataset.whatsappMessage) return link.dataset.whatsappMessage;
 
     if (link.classList.contains('js-service')) {
-      return `Olá, Lorena. Vim pelo site e gostaria de orientação sobre ${link.dataset.serviceLabel}.`;
+      return `Olá, vim pelo site da Amaro e preciso de informações sobre ${link.dataset.serviceLabel}.`;
     }
 
     return DEFAULT_WHATSAPP_MESSAGE;
@@ -130,13 +131,19 @@
       });
     });
 
-    document.querySelectorAll('.js-club-instagram').forEach((link) => {
-      link.addEventListener('click', () => {
-        trackEvent('click_club_instagram', {
-          service_name: 'clube_tiro',
-          cta_location: link.dataset.ctaLocation || 'unknown',
-          link_url: CLUB_INSTAGRAM_URL
-        });
+    document.querySelector('.js-routes')?.addEventListener('click', () => {
+      trackEvent('click_routes', {
+        service_name: 'location',
+        cta_location: 'location',
+        link_url: ROUTES_URL
+      });
+    });
+
+    document.querySelector('.js-review')?.addEventListener('click', () => {
+      trackEvent('review_click', {
+        service_name: 'google_reviews',
+        cta_location: 'reviews',
+        link_url: GOOGLE_URL
       });
     });
   }
@@ -196,7 +203,7 @@
         service_name: service || 'pre_atendimento',
         cta_location: 'quiz',
         quiz_step: 2,
-        quiz_question: 'situacao',
+        quiz_question: 'urgencia',
         quiz_answer: situation || '',
         link_url: WHATSAPP_BASE_URL
       });
@@ -223,7 +230,7 @@
       return;
     }
 
-    const message = `Olá, Lorena. Vim pelo site e gostaria de orientação sobre ${service.value}. Minha situação: ${situation.value}.`;
+    const message = `Olá, vim pelo site da Amaro e preciso de informações sobre ${service.value}. Minha situação: ${situation.value}.`;
     elements.quizStatus.textContent = 'Pronto. Continue o atendimento no WhatsApp.';
     elements.quizSubmit.href = buildWhatsAppUrl(message);
     elements.quizSubmit.classList.remove('is-disabled');

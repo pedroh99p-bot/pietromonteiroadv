@@ -1,6 +1,6 @@
-# Landing page — Lorena Silva
+# Landing page — Amaro Consultoria e Toxicológico
 
-Landing page estática, mobile-first e sem build para GitHub Pages. O projeto usa apenas HTML, CSS e JavaScript nativos, com foco em captação via WhatsApp, SEO básico, tracking em `dataLayer` e performance em telas pequenas.
+Landing page estática, mobile-first e sem build para GitHub Pages. O projeto usa apenas HTML, CSS e JavaScript nativos, com foco em conversão via WhatsApp, SEO local, performance em iPhone/Android e tracking em `dataLayer`.
 
 ## Estrutura
 
@@ -9,17 +9,17 @@ index.html
 css/style.css
 js/main.js
 assets/
-  logo-lorena-silva.webp
-  lorena-hero.webp
-  lorena-specialist.webp
-  combate-urbano-logo.webp
+  logo-amaro.webp
+  amaro-hero.webp
+  amaro-specialist.webp
+  google-icon.webp
 robots.txt
 sitemap.xml
 ```
 
 ## Executar localmente
 
-O `index.html` funciona diretamente no navegador, mas o ideal é usar um servidor estático simples na raiz do projeto.
+O `index.html` funciona direto no navegador, mas o ideal é usar um servidor estático simples na raiz.
 
 Exemplos:
 
@@ -39,10 +39,10 @@ Depois acesse:
 
 ## Assets atuais
 
-- `assets/logo-lorena-silva.webp`: logo redonda principal usada em navbar, preloader, watermarks e favicon.
-- `assets/lorena-hero.webp`: imagem recortada com fundo transparente usada no hero.
-- `assets/lorena-specialist.webp`: retrato usado na seção especialista e Open Graph.
-- `assets/combate-urbano-logo.webp`: logo institucional da seção Clube de Tiro Combate Urbano.
+- `assets/logo-amaro.webp`: logo principal usada em navbar, preloader, watermarks, favicon e blocos institucionais.
+- `assets/amaro-hero.webp`: imagem recortada com fundo transparente usada no hero.
+- `assets/amaro-specialist.webp`: retrato usado na seção institucional da Amaro e no Open Graph.
+- `assets/google-icon.webp`: ícone usado na seção Google e nos cards de avaliações.
 
 Se algum nome ou extensão mudar, atualize as referências em `index.html`.
 
@@ -53,7 +53,7 @@ Se algum nome ou extensão mudar, atualize as referências em `index.html`.
 O número principal está centralizado em `js/main.js`:
 
 ```js
-const WHATSAPP_NUMBER = '5534992524138';
+const WHATSAPP_NUMBER = '5521965960143';
 ```
 
 Mensagens padrão também ficam em `js/main.js`:
@@ -61,27 +61,35 @@ Mensagens padrão também ficam em `js/main.js`:
 - `DEFAULT_WHATSAPP_MESSAGE`
 - `CHATBOT_WHATSAPP_MESSAGE`
 
-Mensagens específicas de botões podem ser alteradas direto no HTML com `data-whatsapp-message`.
+Mensagens específicas podem ser alteradas direto no HTML com `data-whatsapp-message`.
 
-### Instagram da Lorena
+### Instagram
 
 Atualize em:
 
 - `index.html`: links com classe `.js-instagram`
 - `js/main.js`: constante `INSTAGRAM_URL`
 
-### Instagram do Clube
+### Google
+
+O link do botão “Ver no Google” está em:
+
+- `index.html`: botão com classe `.js-review`
+- `js/main.js`: constante `GOOGLE_URL`
+
+### Endereço
 
 Atualize em:
 
-- `index.html`: links com classe `.js-club-instagram`
-- `js/main.js`: constante `CLUB_INSTAGRAM_URL`
+- `index.html`: seção `#localizacao`, rodapé e `iframe` do mapa
+- `js/main.js`: constante `ROUTES_URL`
+- `index.html`: JSON-LD no `<head>`
 
 ## SEO e URLs finais
 
-As URLs finais atuais usam a rota esperada do GitHub Pages:
+A URL esperada para GitHub Pages é:
 
-- `https://pedroh99p-bot.github.io/lorenasilvadespachante/`
+- `https://pedroh99p-bot.github.io/amarodespachante/`
 
 Se isso mudar, atualize:
 
@@ -89,14 +97,14 @@ Se isso mudar, atualize:
 - `robots.txt`
 - `sitemap.xml`
 
-O favicon atual usa a própria logo redonda. Se você trocar o favicon ou a imagem de Open Graph, ajuste o `<head>` em `index.html`.
+O favicon atual usa a própria logo da Amaro. Se você trocar o favicon ou a imagem de Open Graph, ajuste o `<head>` em `index.html`.
 
 ## Schema
 
 O projeto usa:
 
-- `ProfessionalService` sem endereço inventado
-- `FAQPage` baseado nas perguntas visíveis na landing
+- `LocalBusiness` com nome, telefone, endereço e horário informado
+- `FAQPage` baseado nas perguntas visíveis na página
 
 Não há `aggregateRating` no schema.
 
@@ -113,7 +121,7 @@ Eventos atuais:
 
 - `click_whatsapp`
 - `click_instagram`
-- `click_club_instagram`
+- `click_routes`
 - `service_click`
 - `faq_open`
 - `quiz_start`
@@ -123,6 +131,7 @@ Eventos atuais:
 - `chatbot_close`
 - `chatbot_question_click`
 - `chatbot_whatsapp_click`
+- `review_click`
 
 ### Testar eventos no console
 
@@ -141,14 +150,14 @@ Eventos atuais:
 
 URL esperada:
 
-- `https://pedroh99p-bot.github.io/lorenasilvadespachante/`
+- `https://pedroh99p-bot.github.io/amarodespachante/`
 
 ## Checklist antes de publicar
 
 - Validar a composição do hero em iPhone pequeno e Android narrow.
-- Conferir se a logo do clube está com destaque institucional, não promocional.
-- Revisar o Open Graph em compartilhamento real.
-- Confirmar os dados de autoridade exibidos na página.
-- Revisar contraste em brilho alto no mobile.
-- Ativar GTM apenas quando o ID final estiver definido.
-- Criar as páginas finais de Política de Privacidade e Termos de Uso antes de campanhas pagas.
+- Confirmar visual do bloco Google e consistência dos cards de avaliações.
+- Testar mapa, botão de rotas e link do Google em aparelho real.
+- Revisar compartilhamento do Open Graph.
+- Confirmar dados exibidos na página com o cliente.
+- Ativar GTM só quando o ID final estiver definido.
+- Criar páginas reais de Política de Privacidade e Termos de Uso antes de campanhas pagas.
