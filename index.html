@@ -29,7 +29,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
   <link rel="preload" href="assets/pietro-hero.webp" as="image" type="image/webp">
   <link rel="preload" href="assets/logo-pietro-monteiro.webp" as="image" type="image/webp">
-  <link rel="stylesheet" href="css/style.css?v=3">
+  <link rel="stylesheet" href="css/style.css?v=4">
   <script>document.documentElement.classList.replace('no-js', 'js');</script>
 
   <!-- Google Tag Manager: substitua GTM-XXXXXXX e descomente na publicação.
@@ -180,16 +180,16 @@
     <section class="hero section-dark" aria-labelledby="hero-title">
       <div class="container">
         <div class="hero-card reveal">
-          <div class="hero-copy">
+          <div class="hero-content">
             <p class="eyebrow"><svg aria-hidden="true"><use href="#icon-balance"></use></svg> Advogado no RJ • Atendimento nacional</p>
             <p class="hero-chip">Soluções jurídicas para CACs</p>
-            <h1 id="hero-title">Soluções jurídicas para CACs com atuação responsável e atendimento nacional.</h1>
-            <p class="hero-lead">Atendimento jurídico para demandas relacionadas à Polícia Federal, Exército e SINARM, com análise técnica do caso e orientação profissional.</p>
+            <h1 id="hero-title">Soluções jurídicas para CACs com atendimento nacional.</h1>
+            <p class="hero-lead">Atuação em demandas relacionadas à Polícia Federal, Exército e SINARM, com análise técnica do caso e orientação profissional.</p>
             <ul class="hero-badges" aria-label="Áreas centrais de atuação">
               <li>Polícia Federal</li>
               <li>Exército</li>
               <li>SINARM</li>
-              <li>Soluções jurídicas para CACs</li>
+              <li>CACs</li>
             </ul>
             <div class="hero-actions">
               <a class="button button--whatsapp button--large js-whatsapp" href="https://wa.me/message/GRJNWYSXDF64D1" target="_blank" rel="noopener" data-cta-location="hero" data-service-name="atendimento_geral" data-whatsapp-message="Olá, Pietro. Vim pelo site e gostaria de orientação jurídica para CAC.">
@@ -203,10 +203,13 @@
             </div>
           </div>
 
-          <div class="hero-visual" aria-hidden="true">
+          <div class="hero-media" aria-hidden="true">
+            <div class="hero-media__gradient"></div>
             <img class="hero-watermark" src="assets/logo-pietro-monteiro.webp" width="1080" height="1080" alt="">
             <div class="hero-orbit"><span></span><span></span><span></span></div>
-            <img class="hero-person" src="assets/pietro-hero.webp" width="864" height="1080" alt="" loading="eager" fetchpriority="high">
+            <div class="hero-person-frame">
+              <img class="hero-person" src="assets/pietro-hero.webp" width="864" height="1080" alt="" loading="eager" fetchpriority="high">
+            </div>
             <div class="hero-trust-card">
               <strong>Atuação responsável</strong>
               <span>Análise técnica do caso, comunicação clara e orientação sem promessa de resultado.</span>
@@ -463,14 +466,126 @@
       <div class="container">
         <header class="section-heading reveal">
           <p class="overline">Autoridade</p>
-          <h2 id="authority-title">Autoridade no nicho CAC</h2>
-          <p>Uma atuação jurídica especializada exige proximidade com o setor, conhecimento das demandas administrativas e comunicação responsável com quem precisa de orientação.</p>
+          <h2 id="authority-title">Autoridade em soluções jurídicas para CACs</h2>
+          <p>Atuação focada em demandas administrativas, regularidade documental e orientação jurídica responsável.</p>
         </header>
-        <div class="card-grid card-grid--4">
-          <article class="benefit-card reveal"><span>01</span><h3>11,1K seguidores</h3><p>Presença digital focada em conteúdo e orientação para o público CAC.</p></article>
-          <article class="benefit-card reveal"><span>02</span><h3>Atendimento nacional</h3><p>Primeiro contato pelo WhatsApp para clientes de diferentes regiões.</p></article>
-          <article class="benefit-card reveal"><span>03</span><h3>PF • Exército • SINARM</h3><p>Atuação em demandas relacionadas aos principais órgãos competentes.</p></article>
-          <article class="benefit-card reveal"><span>04</span><h3>Parceria Mil Armas RJ</h3><p>Conexão com um ecossistema de treinamento e regularidade.</p></article>
+        <div class="carousel-shell reveal" data-carousel data-carousel-type="authority">
+          <button class="carousel-arrow carousel-arrow--prev" type="button" data-carousel-prev aria-label="Card de autoridade anterior"><span aria-hidden="true">‹</span></button>
+          <div class="carousel-track authority-track">
+            <article class="authority-card">
+              <span class="authority-kicker">Autoridade</span>
+              <h3>+1.000 processos deferidos</h3>
+              <p>Histórico de atuação em processos administrativos relacionados ao universo CAC.</p>
+            </article>
+            <article class="authority-card">
+              <span class="authority-kicker">Cobertura</span>
+              <h3>Atendimento nacional</h3>
+              <p>Orientação jurídica para clientes de diferentes regiões do Brasil.</p>
+            </article>
+            <article class="authority-card">
+              <span class="authority-kicker">Órgãos</span>
+              <h3>PF • Exército • SINARM</h3>
+              <p>Atuação em demandas relacionadas aos principais órgãos competentes.</p>
+            </article>
+            <article class="authority-card">
+              <span class="authority-kicker">Ecossistema</span>
+              <h3>Parceria Mil Armas RJ</h3>
+              <p>Conexão com um ecossistema de treinamento e regularidade.</p>
+            </article>
+            <article class="authority-card">
+              <span class="authority-kicker">Presença digital</span>
+              <h3>11.1K seguidores</h3>
+              <p>Presença digital voltada ao público CAC e orientação jurídica.</p>
+            </article>
+          </div>
+          <button class="carousel-arrow carousel-arrow--next" type="button" data-carousel-next aria-label="Próximo card de autoridade"><span aria-hidden="true">›</span></button>
+          <div class="carousel-dots" aria-label="Posição do carrossel de autoridade"></div>
+        </div>
+
+        <div class="authority-testimonials">
+          <header class="section-heading section-heading--compact reveal">
+            <p class="overline">Depoimentos</p>
+            <h3>Percepção de atendimento</h3>
+            <p>Substituir por depoimentos reais quando houver autorização e material validado.</p>
+          </header>
+          <!-- Substituir estes textos por depoimentos reais, se houver. -->
+          <div class="carousel-shell reveal" data-carousel data-carousel-type="testimonial">
+            <button class="carousel-arrow carousel-arrow--prev" type="button" data-carousel-prev aria-label="Depoimento anterior"><span aria-hidden="true">‹</span></button>
+            <div class="carousel-track testimonial-track">
+              <article class="testimonial-card">
+                <span class="testimonial-stars" aria-label="5 estrelas">★★★★★</span>
+                <strong>Depoimento</strong>
+                <p>“Atendimento claro e muito profissional.”</p>
+              </article>
+              <article class="testimonial-card">
+                <span class="testimonial-stars" aria-label="5 estrelas">★★★★★</span>
+                <strong>Depoimento</strong>
+                <p>“Explicou cada etapa com muita atenção.”</p>
+              </article>
+              <article class="testimonial-card">
+                <span class="testimonial-stars" aria-label="5 estrelas">★★★★★</span>
+                <strong>Depoimento</strong>
+                <p>“Me orientou com segurança sobre o meu caso.”</p>
+              </article>
+              <article class="testimonial-card">
+                <span class="testimonial-stars" aria-label="5 estrelas">★★★★★</span>
+                <strong>Depoimento</strong>
+                <p>“Comunicação objetiva e atendimento rápido.”</p>
+              </article>
+              <article class="testimonial-card">
+                <span class="testimonial-stars" aria-label="5 estrelas">★★★★★</span>
+                <strong>Depoimento</strong>
+                <p>“Consegui entender melhor o caminho jurídico.”</p>
+              </article>
+            </div>
+            <button class="carousel-arrow carousel-arrow--next" type="button" data-carousel-next aria-label="Próximo depoimento"><span aria-hidden="true">›</span></button>
+            <div class="carousel-dots" aria-label="Posição do carrossel de depoimentos"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section national section-dark" id="atendimento-nacional" aria-labelledby="national-title">
+      <div class="container national-grid">
+        <div class="national-copy reveal">
+          <p class="overline">Atendimento nacional</p>
+          <h2 id="national-title">Atendimento nacional com base no Rio de Janeiro</h2>
+          <p class="national-lead">Pietro Monteiro atua com orientação jurídica para CACs em demandas relacionadas à Polícia Federal, Exército e SINARM, com primeiro contato pelo WhatsApp.</p>
+          <ul class="partner-list national-list">
+            <li>Atendimento para clientes em todo o território brasileiro</li>
+            <li>Primeiro contato pelo WhatsApp</li>
+            <li>Análise jurídica inicial do caso</li>
+            <li>Demandas relacionadas à Polícia Federal, Exército e SINARM</li>
+            <li>Atuação responsável, sem promessa de resultado</li>
+          </ul>
+          <ul class="chip-list">
+            <li>RJ</li>
+            <li>Atendimento nacional</li>
+            <li>WhatsApp</li>
+            <li>CACs</li>
+          </ul>
+          <div class="button-row">
+            <a class="button button--whatsapp js-whatsapp" href="https://wa.me/message/GRJNWYSXDF64D1" target="_blank" rel="noopener" data-cta-location="national" data-service-name="atendimento_nacional" data-whatsapp-message="Olá, Pietro. Vim pelo site e gostaria de orientação jurídica para CAC. Estou entrando em contato para uma análise inicial.">
+              <svg aria-hidden="true"><use href="#icon-whatsapp"></use></svg>
+              <span>Falar com Pietro</span>
+            </a>
+          </div>
+        </div>
+        <div class="national-visual reveal" aria-hidden="true">
+          <div class="national-map-card">
+            <div class="national-flag">
+              <span class="national-flag__green"></span>
+              <span class="national-flag__yellow"></span>
+              <span class="national-flag__blue"></span>
+            </div>
+            <svg class="national-map" viewBox="0 0 320 340" role="presentation">
+              <path d="M98 24 158 14l46 20 34 42 38 22-6 48 18 40-24 40-36 10-18 34-38 10-44 30-42-14-18-28-34-6-28-42 4-32-18-38 18-44 30-18 8-42 52-30Z"></path>
+              <path class="national-map__detail" d="M187 200 210 194 226 208 218 228 194 234 180 220Z"></path>
+            </svg>
+            <div class="national-marker">
+              <span>RJ</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -597,6 +712,6 @@
   <!-- Google Tag Manager (noscript): substitua GTM-XXXXXXX e descomente na publicação.
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   -->
-  <script src="js/main.js?v=3" defer></script>
+  <script src="js/main.js?v=4" defer></script>
 </body>
 </html>

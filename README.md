@@ -5,9 +5,9 @@ Landing page estática em HTML, CSS e JavaScript puro para GitHub Pages, com foc
 ## Estrutura
 
 - `index.html`
-  Página principal, SEO, schema, FAQ visível, hero, serviços, quiz, especialista, parceria, autoridade, FAQ, CTA final, footer e botões flutuantes.
+  Página principal, SEO, schema, FAQ visível, hero, serviços, quiz, especialista, parceria, autoridade com depoimentos, atendimento nacional, FAQ, CTA final, footer e botões flutuantes.
 - `css/style.css`
-  Tema premium preto/grafite/prata/dourado, layout mobile-first, hero em duas colunas também no mobile, carrossel, chatbot, animações e responsividade.
+  Tema premium azul-marinho com detalhes dourados, layout mobile-first, hero em duas colunas também no mobile, carrosséis, mapa nacional estilizado, chatbot, animações e responsividade.
 - `js/main.js`
   Tracking `dataLayer`, quiz, chatbot, carrossel, reveal animations, counters e preloader.
 - `assets/`
@@ -83,6 +83,8 @@ Eventos mantidos:
 Evento adicionado:
 
 - `click_partner_instagram`
+- `authority_carousel_interaction`
+- `testimonial_carousel_interaction`
 
 Contrato enviado:
 

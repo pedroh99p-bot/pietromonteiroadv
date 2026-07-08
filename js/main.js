@@ -332,14 +332,34 @@
       const previousButton = shell.querySelector('[data-carousel-prev]');
       const nextButton = shell.querySelector('[data-carousel-next]');
       const dotsContainer = shell.querySelector('.carousel-dots');
+      const carouselType = shell.dataset.carouselType || '';
       let activeIndex = 0;
       let scrollFrame = 0;
+
+      function trackCarouselInteraction(action) {
+        if (carouselType === 'authority') {
+          trackEvent('authority_carousel_interaction', {
+            cta_location: 'authority_carousel',
+            service_name: action
+          });
+        }
+
+        if (carouselType === 'testimonial') {
+          trackEvent('testimonial_carousel_interaction', {
+            cta_location: 'testimonial_carousel',
+            service_name: action
+          });
+        }
+      }
 
       const dots = items.map((item, index) => {
         const dot = document.createElement('button');
         dot.type = 'button';
         dot.setAttribute('aria-label', `Ir para o item ${index + 1}`);
-        dot.addEventListener('click', () => scrollToItem(index));
+        dot.addEventListener('click', () => {
+          trackCarouselInteraction('dot');
+          scrollToItem(index);
+        });
         dotsContainer?.append(dot);
         return dot;
       });
@@ -391,8 +411,14 @@
         scrollFrame = window.requestAnimationFrame(update);
       }, { passive: true });
 
-      previousButton?.addEventListener('click', () => scrollToItem(Math.max(0, activeIndex - 1)));
-      nextButton?.addEventListener('click', () => scrollToItem(Math.min(items.length - 1, activeIndex + 1)));
+      previousButton?.addEventListener('click', () => {
+        trackCarouselInteraction('prev');
+        scrollToItem(Math.max(0, activeIndex - 1));
+      });
+      nextButton?.addEventListener('click', () => {
+        trackCarouselInteraction('next');
+        scrollToItem(Math.min(items.length - 1, activeIndex + 1));
+      });
 
       carouselControllers.push({
         refresh() {
